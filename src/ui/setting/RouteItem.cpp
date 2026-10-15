@@ -17,6 +17,7 @@
 #include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QListView>
 #include <QListWidget>
 #include <QMessageBox>
 #include <QPlainTextEdit>
@@ -25,6 +26,7 @@
 #include <QSet>
 #include <QSizePolicy>
 #include <QStackedWidget>
+#include <QStringListModel>
 #include <QGridLayout>
 #include <QMouseEvent>
 #include <QSignalBlocker>
@@ -33,14 +35,18 @@
 
 void adjustComboBoxWidth(const QComboBox *comboBox) {
     int maxWidth = 0;
+    const QFontMetrics fontMetrics(comboBox->font());
+    const int count = comboBox->count();
 
-    for (int i = 0; i < comboBox->count(); ++i) {
-        QFontMetrics fontMetrics(comboBox->font());
+    for (int i = 0; i < count; ++i) {
         int itemWidth = fontMetrics.horizontalAdvance(comboBox->itemText(i));
         maxWidth = qMax(maxWidth, itemWidth);
     }
 
     maxWidth += 30;
+    if (const auto *scr = comboBox->screen() != nullptr ? comboBox->screen() : QGuiApplication::primaryScreen()) {
+        maxWidth = qMin(maxWidth, scr->availableGeometry().width() * 2 / 3);
+    }
     comboBox->view()->setMinimumWidth(maxWidth);
 }
 
@@ -95,26 +101,36 @@ RouteItem::RouteItem(QWidget *parent, const std::shared_ptr<Configs::RouteProfil
     outboundMap[1] = -2;
     outboundMap[2] = Configs::warpBypassID;
     auto proxyListRaw = Configs::dataManager->profilesRepo->GetAllProfileIDNameMapped();
-    QMap<int, QString> idToName;
+    QHash<int, QString> idToName;
+    idToName.reserve(static_cast<int>(proxyListRaw.size()));
     for (const auto& [id, name] : proxyListRaw) idToName.insert(id, name);
     auto groupIDs = Configs::dataManager->groupsRepo->GetGroupsTabOrder();
     for (auto groupID : groupIDs) {
         auto group = Configs::dataManager->groupsRepo->GetGroup(groupID);
         if (!group) continue;
         for (int profileID : group->profiles) {
-            if (!idToName.contains(profileID)) continue;
+            auto it = idToName.constFind(profileID);
+            if (it == idToName.cend()) continue;
             outboundMap[outboundMap.size()] = profileID;
-            outbounds << QString("[" + group->name + "] ") + idToName[profileID];
+            outbounds << QString("[" + group->name + "] ") + it.value();
         }
     }
 
+    auto* outboundsModel = new QStringListModel(outbounds, this);
+    outboundsModel->setObjectName(QStringLiteral("cached_outbounds_model"));
+
+    geo_items.reserve(static_cast<int>(ruleSetList.size()));
     for (const auto& item : ruleSetList) {
         geo_items.append(QString::fromUtf8(item.first.data(), item.first.size()));
     }
 
     ui->route_name->setText(chain->name);
     ui->rule_preview->setReadOnly(true);
-    ui->rule_attr_tabs->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    ui->rule_attr_tabs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    ui->rule_attr_tabs->setMinimumWidth(0);
+    ui->rule_attr_tabs->setUsesScrollButtons(true);
+    ui->rule_attr_tabs->tabBar()->setUsesScrollButtons(true);
+    ui->rule_attr_tabs->tabBar()->setExpanding(false);
     ui->rule_attr_tabs->setTabsClosable(true);
     connect(ui->rule_attr_tabs, &QTabWidget::tabCloseRequested, this, [this](int index) {
         if (currentIndex < 0) return;
@@ -126,11 +142,6 @@ RouteItem::RouteItem(QWidget *parent, const std::shared_ptr<Configs::RouteProfil
     connect(ui->rule_attr_tabs, &QTabWidget::currentChanged, this, [this](int index) {
         if (currentIndex >= 0 && !currentRuleIsEndpoint() && index >= 0 && index < ui->rule_attr_tabs->count())
             chain->Rules[currentIndex]->uiActiveAttributeTabLabel = ui->rule_attr_tabs->tabText(index);
-        if (QWidget* w = ui->rule_attr_tabs->currentWidget()) {
-            w->updateGeometry();
-            w->adjustSize();
-        }
-        ui->rule_attr_tabs->updateGeometry();
     });
 
     ensurePlusTabBuiltOnce();
@@ -138,6 +149,7 @@ RouteItem::RouteItem(QWidget *parent, const std::shared_ptr<Configs::RouteProfil
     ui->def_out->setCurrentText(Configs::outboundIDToString(chain->defaultOutboundID));
 
     QStringList ruleItems = {"domain:", "suffix:", "regex:", "keyword:", "ip:", "processName:", "processPath:", "ruleset:"};
+    ruleItems.reserve(ruleItems.size() + static_cast<int>(ruleSetList.size()));
     for (const auto& item : ruleSetList) {
         ruleItems.append("ruleset:" + QString::fromUtf8(item.first.data(), item.first.size()));
     }
@@ -155,10 +167,16 @@ RouteItem::RouteItem(QWidget *parent, const std::shared_ptr<Configs::RouteProfil
     ui->simple_proxy->hide();
     ui->simple_warpbypass->hide();
 
-    simpleDirect->setPlainText(chain->GetSimpleRules(Configs::bypass));
-    simpleBlock->setPlainText(chain->GetSimpleRules(Configs::block));
-    simpleProxy->setPlainText(chain->GetSimpleRules(Configs::proxy));
-    simpleWarpBypass->setPlainText(chain->GetSimpleRules(Configs::warpBypass));
+    {
+        const QSignalBlocker b1(simpleDirect);
+        const QSignalBlocker b2(simpleBlock);
+        const QSignalBlocker b3(simpleProxy);
+        const QSignalBlocker b4(simpleWarpBypass);
+        simpleDirect->setPlainText(chain->GetSimpleRules(Configs::bypass));
+        simpleBlock->setPlainText(chain->GetSimpleRules(Configs::block));
+        simpleProxy->setPlainText(chain->GetSimpleRules(Configs::proxy));
+        simpleWarpBypass->setPlainText(chain->GetSimpleRules(Configs::warpBypass));
+    }
 
     // Dispatch on page identity: literal tab indices misroute as soon as a page is inserted.
     lastTabPage = ui->tabWidget->currentWidget();
@@ -188,6 +206,10 @@ RouteItem::RouteItem(QWidget *parent, const std::shared_ptr<Configs::RouteProfil
         syncEndpointRules();
 
         if (lastTabPage == ui->tab_2) {
+            const QSignalBlocker b1(simpleDirect);
+            const QSignalBlocker b2(simpleBlock);
+            const QSignalBlocker b3(simpleProxy);
+            const QSignalBlocker b4(simpleWarpBypass);
             simpleDirect->setPlainText(chain->GetSimpleRules(Configs::bypass));
             simpleBlock->setPlainText(chain->GetSimpleRules(Configs::block));
             simpleProxy->setPlainText(chain->GetSimpleRules(Configs::proxy));
@@ -251,7 +273,6 @@ RouteItem::RouteItem(QWidget *parent, const std::shared_ptr<Configs::RouteProfil
     setupRemoteSection();
     setupEndpointsSection();
 
-    updateRuleSection();
     const auto *scr = screen() != nullptr ? screen() : QGuiApplication::primaryScreen();
     if (scr != nullptr) resize(sizeHint().boundedTo(scr->availableGeometry().size()));
 }
@@ -587,10 +608,16 @@ void RouteItem::reloadRuleViewsFromChain() {
     currentIndex = -1;
     ui->route_name->setText(chain->name);
     syncEndpointRules();
-    simpleDirect->setPlainText(chain->GetSimpleRules(Configs::bypass));
-    simpleBlock->setPlainText(chain->GetSimpleRules(Configs::block));
-    simpleProxy->setPlainText(chain->GetSimpleRules(Configs::proxy));
-    simpleWarpBypass->setPlainText(chain->GetSimpleRules(Configs::warpBypass));
+    {
+        const QSignalBlocker b1(simpleDirect);
+        const QSignalBlocker b2(simpleBlock);
+        const QSignalBlocker b3(simpleProxy);
+        const QSignalBlocker b4(simpleWarpBypass);
+        simpleDirect->setPlainText(chain->GetSimpleRules(Configs::bypass));
+        simpleBlock->setPlainText(chain->GetSimpleRules(Configs::block));
+        simpleProxy->setPlainText(chain->GetSimpleRules(Configs::proxy));
+        simpleWarpBypass->setPlainText(chain->GetSimpleRules(Configs::warpBypass));
+    }
     ui->def_out->setCurrentText(Configs::outboundIDToString(chain->defaultOutboundID));
 }
 
@@ -695,6 +722,7 @@ QWidget* RouteItem::makeAttributeEditorPage(const QString& attr) {
             auto* cb = new QComboBox(container);
             cb->addItems({QStringLiteral("false"), QStringLiteral("true")});
             cb->setCurrentText(rule->get_current_value_bool(attr));
+            adjustComboBoxWidth(cb);
             connect(cb, &QComboBox::currentTextChanged, this, [this, attr](const QString& t) {
                 if (currentIndex < 0) return;
                 chain->Rules[currentIndex]->set_field_value(attr, {t});
@@ -708,8 +736,40 @@ QWidget* RouteItem::makeAttributeEditorPage(const QString& attr) {
             auto* cb = new QComboBox(container);
             if (attr == QStringLiteral("outbound")) {
                 cb->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-                cb->addItems(outbounds);
-                cb->setCurrentText(get_outbound_name(rule->outboundID));
+                if (auto* lv = qobject_cast<QListView*>(cb->view())) {
+                    lv->setUniformItemSizes(true);
+                }
+
+                auto* model = this->findChild<QStringListModel*>(QStringLiteral("cached_outbounds_model"), Qt::FindDirectChildrenOnly);
+                if (!model) {
+                    model = new QStringListModel(outbounds, this);
+                    model->setObjectName(QStringLiteral("cached_outbounds_model"));
+                }
+                cb->setModel(model);
+
+                int targetIdx = 0;
+                for (auto it = outboundMap.cbegin(); it != outboundMap.cend(); ++it) {
+                    if (it->second == rule->outboundID) {
+                        targetIdx = it->first;
+                        break;
+                    }
+                }
+                cb->setCurrentIndex(targetIdx);
+
+                int cachedWidth = this->property("cached_outbounds_width").toInt();
+                if (cachedWidth <= 0) {
+                    const QFontMetrics fm(cb->font());
+                    for (const QString& item : outbounds) {
+                        cachedWidth = qMax(cachedWidth, fm.horizontalAdvance(item));
+                    }
+                    cachedWidth += 30;
+                    if (const auto *scr = this->screen() != nullptr ? this->screen() : QGuiApplication::primaryScreen()) {
+                        cachedWidth = qMin(cachedWidth, scr->availableGeometry().width() * 2 / 3);
+                    }
+                    this->setProperty("cached_outbounds_width", cachedWidth);
+                }
+                cb->view()->setMinimumWidth(cachedWidth);
+
                 connect(cb, &QComboBox::currentTextChanged, this, [this, cb] {
                     if (currentIndex < 0) return;
                     chain->Rules[currentIndex]->set_field_value(QStringLiteral("outbound"),
@@ -720,6 +780,7 @@ QWidget* RouteItem::makeAttributeEditorPage(const QString& attr) {
                 cb->addItems(Configs::RouteRule::get_values_for_field(attr));
                 const auto cur = rule->get_current_value_string(attr);
                 cb->setCurrentText(cur.isEmpty() ? QString() : cur[0]);
+                adjustComboBoxWidth(cb);
                 connect(cb, &QComboBox::currentTextChanged, this, [this, attr](const QString& t) {
                     if (currentIndex < 0) return;
                     chain->Rules[currentIndex]->set_field_value(attr, {t});
@@ -727,14 +788,16 @@ QWidget* RouteItem::makeAttributeEditorPage(const QString& attr) {
                 });
             }
             addDisabled(cb);
-            adjustComboBoxWidth(cb);
             lay->addWidget(cb);
             break;
         }
         case Configs::text: {
             if (attr == QStringLiteral("rule_set")) {
                 auto* ed = new AutoCompleteTextEdit("", geo_items, container);
-                ed->setPlainText(rule->get_current_value_string(attr).join('\n'));
+                {
+                    const QSignalBlocker blocker(ed);
+                    ed->setPlainText(rule->get_current_value_string(attr).join('\n'));
+                }
                 ed->setMinimumHeight(100);
                 ed->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
                 connect(ed, &QPlainTextEdit::textChanged, this, [this, attr, ed] {
@@ -746,7 +809,10 @@ QWidget* RouteItem::makeAttributeEditorPage(const QString& attr) {
                 lay->addWidget(ed, 1);
             } else {
                 auto* te = new QPlainTextEdit(container);
-                te->setPlainText(rule->get_current_value_string(attr).join('\n'));
+                {
+                    const QSignalBlocker blocker(te);
+                    te->setPlainText(rule->get_current_value_string(attr).join('\n'));
+                }
                 te->setMinimumHeight(100);
                 te->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
                 connect(te, &QPlainTextEdit::textChanged, this, [this, attr, te] {
@@ -761,7 +827,7 @@ QWidget* RouteItem::makeAttributeEditorPage(const QString& attr) {
         }
     }
     container->setMinimumHeight(100);
-    container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     return container;
 }
 
@@ -773,7 +839,8 @@ void RouteItem::ensurePlusTabBuiltOnce() {
     lay->setContentsMargins(8, 8, 8, 8);
 
     auto* hint = new QLabel(tr("Check attributes to show as tabs; unchecking clears their values."), container);
-    hint->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    hint->setWordWrap(true);
+    hint->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     ruleAttrPlusList = new QListWidget(container);
     ruleAttrPlusList->setMinimumHeight(100);
     ruleAttrPlusList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -788,15 +855,18 @@ void RouteItem::ensurePlusTabBuiltOnce() {
     lay->addWidget(hint);
     lay->addWidget(ruleAttrPlusList);
     container->setMinimumHeight(100);
-    container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     ui->rule_attr_tabs->addTab(container, QStringLiteral("+"));
     ui->rule_attr_tabs->tabBar()->setTabButton(ui->rule_attr_tabs->count() - 1, QTabBar::RightSide, nullptr);
 }
 
 void RouteItem::removeAllAttributeTabsExceptPlus() {
     ensurePlusTabBuiltOnce();
-    while (ui->rule_attr_tabs->count() > 1)
+    while (ui->rule_attr_tabs->count() > 1) {
+        QWidget* w = ui->rule_attr_tabs->widget(0);
         ui->rule_attr_tabs->removeTab(0);
+        delete w;
+    }
 }
 
 void RouteItem::syncPlusListCheckStatesFromRule() {
@@ -887,6 +957,7 @@ bool RouteItem::eventFilter(QObject* watched, QEvent* event) {
 void RouteItem::rebuildRuleAttributeTabs() {
     ensurePlusTabBuiltOnce();
 
+    ui->rule_attr_tabs->setUpdatesEnabled(false);
     ui->rule_attr_tabs->blockSignals(true);
     removeAllAttributeTabsExceptPlus();
 
@@ -894,6 +965,7 @@ void RouteItem::rebuildRuleAttributeTabs() {
         syncPlusListCheckStatesFromRule();
         applyStoredRuleAttrTabSelection();
         ui->rule_attr_tabs->blockSignals(false);
+        ui->rule_attr_tabs->setUpdatesEnabled(true);
         return;
     }
 
@@ -910,6 +982,7 @@ void RouteItem::rebuildRuleAttributeTabs() {
     applyStoredRuleAttrTabSelection();
 
     ui->rule_attr_tabs->blockSignals(false);
+    ui->rule_attr_tabs->setUpdatesEnabled(true);
 }
 
 void RouteItem::updateRuleSection() {
