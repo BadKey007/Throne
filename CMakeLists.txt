@@ -240,6 +240,8 @@ set(PROJECT_SOURCES
         src/ui/widget/SeriesBuffer.cpp
         include/ui/widget/LiveChart.h
         src/ui/widget/LiveChart.cpp
+        include/ui/widget/MuxSettingsWidget.h
+        src/ui/widget/MuxSettingsWidget.cpp
         include/ui/widget/json/JsonTree.h
         src/ui/widget/json/JsonTree.cpp
         include/ui/widget/json/JsonValidator.h
