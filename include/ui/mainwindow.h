@@ -572,6 +572,8 @@ private:
 
     bool offerCoreReset(const QString &error) override;
 
+    bool offerLeftoverTunAdapterRetry(const QString &error) override;
+
     void stopFailed(const QString &error) override;
 
     Engine::SlowOperation slowOperation(Engine::SlowOperationKind kind, int delayMs) override;

@@ -8930,6 +8930,22 @@ Error: %1</source>
         <translation>Отмена</translation>
     </message>
     <message>
+        <source>Leftover Tun adapter</source>
+        <translation>Оставшийся адаптер TUN</translation>
+    </message>
+    <message>
+        <source>Windows was still holding the Tun adapter from an earlier session that did not close cleanly. Starting the profile again usually works; if it keeps failing, restart Windows.
+
+Error: %1</source>
+        <translation>Windows всё ещё удерживала адаптер TUN от предыдущего сеанса, который не был корректно завершён. Обычно помогает повторный запуск профиля; если ошибка повторяется, перезагрузите Windows.
+
+Ошибка: %1</translation>
+    </message>
+    <message>
+        <source>Start Again</source>
+        <translation>Запустить снова</translation>
+    </message>
+    <message>
         <source>Add new Group</source>
         <translation>Добавить новую группу</translation>
     </message>
