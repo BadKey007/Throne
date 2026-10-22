@@ -817,6 +817,12 @@ void MainWindow::onConnectionContextMenu(const QPoint& pos)
     const QStringList ids = connectionsModel->connectionIdsAt(sourceIndex);
     if (const auto* meta = connectionsModel->metaAt(sourceIndex))
     {
+        // "&" doubled, or a logical rule's "&&" would read as a mnemonic.
+        auto* matched = menu.addAction(ConnectionsTreeModel::matchedRuleText(*meta, 48).replace('&', QStringLiteral("&&")));
+        matched->setEnabled(false);
+        matched->setToolTip(ConnectionsTreeModel::matchedRuleToolTip(*meta));
+        menu.addSeparator();
+
         const QString domain = meta->domain.trimmed();
         const QString host = domain.isEmpty() ? Stats::EndpointHost(meta->dest.trimmed()) : domain;
 

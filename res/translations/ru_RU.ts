@@ -27,6 +27,10 @@
         <translation>Система</translation>
     </message>
     <message>
+        <source>Matched: %1 → %2</source>
+        <translation>Сработало: %1 → %2</translation>
+    </message>
+    <message>
         <source>Process: %1
 Active connections: %2
 Total traffic: %3↑ %4↓
