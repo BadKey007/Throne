@@ -1019,8 +1019,8 @@ namespace Configs {
                 return legacyDnsObj(address);
             }
             if (parsed.type == "local") {
-                // A probe box outlives Tun toggles, and its `local` would follow resolved's `~.` into a running tun (#1975).
-                if (ctx.isResolvedUsed && (ctx.tunEnabled || ctx.forTest)) {
+                // The kill switch drops resolved's own upstream queries; a probe box outlives Tun toggles, and its `local` would follow resolved's `~.` into a running tun (#1975).
+                if (ctx.isResolvedUsed && (ctx.tunEnabled || ctx.forTest || dataManager->settingsRepo->kill_switch)) {
                     return {{"type", "underlying"}};
                 }
                 return {{"type", "local"}};

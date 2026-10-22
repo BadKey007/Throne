@@ -432,6 +432,9 @@ private:
 
     void refresh_proxy_list_impl_refresh_data(const QList<int>& ids = {}, bool mayNeedReset = false);
 
+    // Replaces each server domain with the first address the core's dns-direct returns.
+    void resolve_profile_domains(const QList<std::shared_ptr<Configs::Profile>> &profiles, const std::function<void()> &onFinished);
+
     void parseQrImage(const QPixmap *image);
 
     void importFromFiles(const QStringList &paths);

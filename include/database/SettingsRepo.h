@@ -53,7 +53,6 @@ namespace Configs {
         int imported_count = 0;
         bool refreshing_group_list = false;
         bool refreshing_group = false;
-        std::atomic<int> resolve_count = 0;
 
         QStringList argv = {};
         bool flag_use_appdata = false;

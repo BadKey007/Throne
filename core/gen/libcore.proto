@@ -48,6 +48,7 @@ service LibcoreService {
   rpc ScanURLTest(ScanURLTestRequest) returns (TestResp);
   rpc ScanCheckNetwork(ScanCheckNetworkRequest) returns (ScanCheckNetworkResponse);
   rpc ParseRuleSet(ParseRuleSetRequest) returns (ParseRuleSetResponse);
+  rpc ResolveDomains(ResolveDomainsRequest) returns (ResolveDomainsResponse);
 }
 
 message EmptyReq {}
@@ -648,4 +649,22 @@ message ParseRuleSetResponse {
   // Inverted and AND rules: they do not describe a set of addresses.
   optional int32 skipped_rules = 3 [default = 0];
   optional int32 version = 4 [default = 0];
+}
+
+// Looked up through dns-direct, the resolver the core dials servers with, never the OS resolver.
+message ResolveDomainsRequest {
+  repeated string domains = 1;
+  // A probe box config, started only when the running profile has no dns-direct (or none runs).
+  optional string config = 2 [default = ""];
+}
+
+message ResolveDomainsResponse {
+  // In request order.
+  repeated ResolvedDomain results = 1;
+}
+
+message ResolvedDomain {
+  optional string domain = 1 [default = ""];
+  repeated string addresses = 2;
+  optional string error = 3 [default = ""];
 }
