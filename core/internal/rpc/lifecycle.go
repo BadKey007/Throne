@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net/netip"
 	"runtime"
+	"slices"
 	"strings"
 	"time"
 
@@ -129,7 +129,24 @@ func (s *server) Start(ctx context.Context, in *gen.LoadConfigReq) (out *gen.Err
 			routeRules = options.Route.Rules
 		}
 	})
+	systemDNS := runtime.GOOS == "darwin" && in.GetTunIpv4Cidr() != ""
+	if systemDNS {
+		if e := sysdns.Prepare(); e != nil {
+			log.Println("System DNS left unchanged:", e)
+			systemDNS = false
+		}
+	}
+	dropSystemDNS := func(options *option.Options) {
+		if !systemDNS {
+			options.Inbounds = slices.DeleteFunc(options.Inbounds, func(inbound option.Inbound) bool {
+				return inbound.Tag == sysdns.InboundTag
+			})
+		}
+	}
+
+	box, cancel, err := boxmain.Create([]byte(*in.CoreConfig), boxCtx.publish, dropSystemDNS)
 	if err != nil {
+		sysdns.Release()
 		if extraProcess != nil {
 			extraProcess.Stop()
 			extraProcess = nil
@@ -139,37 +156,10 @@ func (s *server) Start(ctx context.Context, in *gen.LoadConfigReq) (out *gen.Err
 	}
 	setBoxInstance(box, cancel, routeRules)
 
-	if runtime.GOOS == "darwin" && in.GetTunIpv4Cidr() != "" {
-		stopAllCores := func() {
-			box.CloseWithTimeout(cancel, time.Second*2, log.Println, true)
-			setBoxInstance(nil, nil, nil)
-			if extraProcess != nil {
-				extraProcess.Stop()
-				extraProcess = nil
-			}
-			closeXray()
+	if systemDNS {
+		if e := sysdns.Apply(box.Network().InterfaceMonitor()); e != nil {
+			log.Println("Failed to set system DNS:", e)
 		}
-
-		tunCIDR := in.GetTunIpv4Cidr()
-		tunPrefix, parseErr := netip.ParsePrefix(tunCIDR)
-		if parseErr != nil || !tunPrefix.Addr().Is4() {
-			err = fmt.Errorf("invalid tun_ipv4_cidr %q", tunCIDR)
-			stopAllCores()
-			return
-		}
-
-		tunDNS := tunPrefix.Addr()
-		if !tunDNS.IsValid() || !tunDNS.Is4() {
-			err = fmt.Errorf("got invalid DNS IP from tun_ipv4_cidr: %s", tunDNS)
-			stopAllCores()
-			return
-		}
-
-		if err := sysdns.SetSystemDNS(tunDNS.String(), box.Network().InterfaceMonitor()); err != nil {
-			log.Println("Failed to set system DNS:", err)
-		}
-
-		needUnsetDNS = true
 	}
 
 	if in.GetTunIpv4Cidr() != "" {
@@ -202,13 +192,8 @@ func (s *server) Stop(ctx context.Context, in *gen.EmptyReq) (out *gen.ErrorResp
 		stopEgressForwardingWatch = nil
 	}
 
-	if needUnsetDNS {
-		needUnsetDNS = false
-		err := sysdns.SetSystemDNS("Empty", box.Network().InterfaceMonitor())
-		if err != nil {
-			log.Println("Failed to unset system DNS:", err)
-		}
-	}
+	// Before the box closes, so the system resolver never points at a listener that is already gone.
+	sysdns.Release()
 	// Unpublished first, so a poll mid-teardown sees no instance rather than a dying one.
 	setBoxInstance(nil, nil, nil)
 	box.CloseWithTimeout(cancel, time.Second*2, log.Println, true)

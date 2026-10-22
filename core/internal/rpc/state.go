@@ -34,8 +34,6 @@ var xrayFullGates []*xray.Gate
 // Reached only from Start/Stop, i.e. always under lifecycleMu.
 var extraProcess *process.Process
 
-var needUnsetDNS bool
-
 var stopEgressForwardingWatch func()
 
 var errInstanceNotRunning = errors.New("Instance is not running")
