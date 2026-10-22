@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"runtime"
-	"slices"
 	"strings"
 	"time"
 
@@ -123,42 +122,44 @@ func (s *server) Start(ctx context.Context, in *gen.LoadConfigReq) (out *gen.Err
 		setXrayFullGates(gates)
 	}
 
-	var routeRules []option.Rule
-	box, cancel, err := boxmain.Create([]byte(*in.CoreConfig), boxCtx.publish, func(options *option.Options) {
-		if options.Route != nil {
-			routeRules = options.Route.Rules
-		}
-	})
-	systemDNS := runtime.GOOS == "darwin" && in.GetTunIpv4Cidr() != ""
-	if systemDNS {
-		if e := sysdns.Prepare(); e != nil {
-			log.Println("System DNS left unchanged:", e)
-			systemDNS = false
-		}
-	}
-	dropSystemDNS := func(options *option.Options) {
-		if !systemDNS {
-			options.Inbounds = slices.DeleteFunc(options.Inbounds, func(inbound option.Inbound) bool {
-				return inbound.Tag == sysdns.InboundTag
-			})
-		}
-	}
-
-	box, cancel, err := boxmain.Create([]byte(*in.CoreConfig), boxCtx.publish, dropSystemDNS)
-	if err != nil {
+	stopSidecars := func() {
 		sysdns.Release()
 		if extraProcess != nil {
 			extraProcess.Stop()
 			extraProcess = nil
 		}
 		closeXray()
+	}
+
+	// A macOS Tun whose system resolver cannot be pointed at it would start with every lookup scoped past it.
+	systemDNS := runtime.GOOS == "darwin" && in.GetTunIpv4Cidr() != ""
+	if systemDNS {
+		if e := sysdns.Prepare(); e != nil {
+			stopSidecars()
+			err = E.Cause(e, "set up the system DNS")
+			return
+		}
+	}
+
+	var routeRules []option.Rule
+	box, cancel, err := boxmain.Create([]byte(*in.CoreConfig), boxCtx.publish, func(options *option.Options) {
+		if options.Route != nil {
+			routeRules = options.Route.Rules
+		}
+	})
+	if err != nil {
+		stopSidecars()
 		return
 	}
 	setBoxInstance(box, cancel, routeRules)
 
 	if systemDNS {
 		if e := sysdns.Apply(box.Network().InterfaceMonitor()); e != nil {
-			log.Println("Failed to set system DNS:", e)
+			sysdns.Release()
+			box.CloseWithTimeout(cancel, time.Second*2, log.Println, true)
+			stopSidecars()
+			err = E.Cause(e, "set the system DNS")
+			return
 		}
 	}
 
