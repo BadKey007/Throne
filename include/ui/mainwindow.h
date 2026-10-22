@@ -68,8 +68,10 @@ class GlobalHotkeys;
 class DialogVpnAuth;
 class DialogScanner;
 class DialogIpLists;
+class CommandPalette;
 
 namespace Qv2ray::ui { class SyntaxHighlighter; }
+namespace SettingsIndex { struct Item; }
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -479,6 +481,18 @@ private:
     QList<QAction*> getActionsForShortcut();
 
     void loadShortcuts();
+
+    QPointer<CommandPalette> commandPalette;
+    QAction *commandPaletteAction = nullptr;
+    QHash<QString, QAction *> settingsDialogOpeners;
+
+    void setupCommandPalette();
+
+    void createCommandPalette();
+
+    void showCommandPalette();
+
+    void revealSetting(const SettingsIndex::Item &item);
 
     void url_test_current();
 
