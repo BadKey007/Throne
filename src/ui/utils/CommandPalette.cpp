@@ -198,7 +198,7 @@ namespace {
 
 CommandPalette::CommandPalette(QWidget *parent, QList<QPair<QString, QMenu *>> menus, const QAction *skip)
     : QDialog(parent), roots(std::move(menus)), skipAction(skip) {
-    setWindowTitle(tr("Search Commands and Settings"));
+    setWindowTitle(tr("Search Settings"));
     auto *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
@@ -207,8 +207,8 @@ CommandPalette::CommandPalette(QWidget *parent, QList<QPair<QString, QMenu *>> m
     edit->setFrame(false);
     edit->setTextMargins(8, 8, 8, 8);
     edit->setFont(scaledFont(edit->font(), 1.15));
-    edit->setPlaceholderText(tr("Search commands and settings"));
-    edit->setAccessibleName(tr("Search commands and settings"));
+    edit->setPlaceholderText(tr("Search settings"));
+    edit->setAccessibleName(tr("Search settings"));
     edit->installEventFilter(this);
     layout->addWidget(edit);
 

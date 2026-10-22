@@ -17,7 +17,7 @@
 #include "include/ui/utils/SettingsIndex.h"
 
 void MainWindow::setupCommandPalette() {
-    commandPaletteAction = new QAction(tr("Search Commands and Settings"), this);
+    commandPaletteAction = new QAction(tr("Search Settings"), this);
     commandPaletteAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_K));
     connect(commandPaletteAction, &QAction::triggered, this, &MainWindow::showCommandPalette);
     addAction(commandPaletteAction);
