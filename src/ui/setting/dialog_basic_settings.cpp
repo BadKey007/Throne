@@ -52,6 +52,7 @@
 #include "include/sys/UrlScheme.hpp"
 #include "include/ui/mainwindow.h"
 #include "include/ui/setting/DiagnosticsTab.h"
+#include "include/ui/utils/NativeFileDialog.h"
 
 namespace {
     constexpr int kBasicSettingsMinAutoUpdate = 30;
@@ -366,7 +367,7 @@ DialogBasicSettings::DialogBasicSettings(QWidget *parent)
     connect(ui->select_custom_icon, &QPushButton::clicked, this, [=, this] {
         auto n = QMessageBox::information(this, "Custom Icon Manual", tr(Configs::Information::CustomIconManual.toStdString().c_str()), QMessageBox::Open | QMessageBox::Cancel);
         if (n == QMessageBox::Open) {
-            auto fileNames = QFileDialog::getOpenFileNames(this,
+            auto fileNames = NativeFileDialog::getOpenFileNames(this,
                 tr("Select png icons"), QDir::homePath(), tr("Image Files (*.png)"));
             QString errors;
             for (const auto& fileName : fileNames) {
@@ -835,7 +836,7 @@ void DialogBasicSettings::on_backup_create_clicked() {
 
     Engine::BackupArchive::Prepare(parts);
 
-    QString filePath = QFileDialog::getSaveFileName(
+    QString filePath = NativeFileDialog::getSaveFileName(
         this,
         tr("Create Backup"),
         QDir::homePath() + "/Throne-backup.thrbackup",
@@ -863,7 +864,7 @@ void DialogBasicSettings::on_backup_create_clicked() {
 
 void DialogBasicSettings::on_backup_restore_clicked() {
     if (webDavBusy) return;
-    QString filePath = QFileDialog::getOpenFileName(
+    QString filePath = NativeFileDialog::getOpenFileName(
         this,
         tr("Restore Backup"),
         QDir::homePath(),

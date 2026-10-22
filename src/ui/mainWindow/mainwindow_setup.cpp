@@ -47,6 +47,7 @@
 #include "include/ui/utils/ProfilesTableModel.h"
 
 #include "include/ui/group/dialog_edit_group.h"
+#include "include/ui/utils/NativeFileDialog.h"
 
 #ifdef Q_OS_LINUX
 #include <QDBusInterface>
@@ -945,7 +946,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             tr("Config files (*.json *.conf *.txt *.yaml *.yml *.ini *.ovpn *.xml)"),
             tr("QR code images (*.png *.jpg *.jpeg *.bmp *.gif *.webp)"),
         };
-        const auto paths = QFileDialog::getOpenFileNames(this, tr("Select profile files"), QString(), filters.join(";;"));
+        const auto paths = NativeFileDialog::getOpenFileNames(this, tr("Select profile files"), QString(), filters.join(";;"));
         if (paths.isEmpty()) return;
         importFromFiles(paths);
     });
