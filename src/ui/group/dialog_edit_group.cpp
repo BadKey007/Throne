@@ -213,7 +213,9 @@ DialogEditGroup::DialogEditGroup(const std::shared_ptr<Configs::Group> &ent, QWi
         QStringList links;
         auto profiles = Configs::dataManager->profilesRepo->GetProfileBatch(ent->Profiles());
         for (const auto &profile: profiles) {
-            links += profile->outbound->ExportToLink();
+            auto link = profile->outbound->ExportToLink();
+            if (link.isEmpty()) link = profile->outbound->ExportJsonLink();
+            links += link;
         }
         QApplication::clipboard()->setText(links.join("\n"));
         MessageBoxInfo(software_name, tr("Copied"));

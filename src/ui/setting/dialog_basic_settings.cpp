@@ -485,6 +485,7 @@ DialogBasicSettings::DialogBasicSettings(QWidget *parent)
     ui->disable_priv_req->setChecked(Configs::dataManager->settingsRepo->disable_privilege_req);
     ui->windows_no_admin->setChecked(Configs::dataManager->settingsRepo->disable_run_admin);
     ui->mozilla_cert->setChecked(Configs::dataManager->settingsRepo->use_mozilla_certs);
+    D_LOAD_BOOL(xray_use_system_ca)
     D_LOAD_BOOL(kill_switch)
 
     D_LOAD_BOOL(skip_cert)
@@ -738,6 +739,7 @@ void DialogBasicSettings::accept() {
     if (Configs::dataManager->settingsRepo->disable_run_admin != ui->windows_no_admin->isChecked()) CACHE.updateDisableAdmin = true;
     Configs::dataManager->settingsRepo->disable_run_admin = ui->windows_no_admin->isChecked();
     Configs::dataManager->settingsRepo->use_mozilla_certs = ui->mozilla_cert->isChecked();
+    D_SAVE_BOOL(xray_use_system_ca)
     const bool killSwitchChanged = Configs::dataManager->settingsRepo->kill_switch != ui->kill_switch->isChecked();
     D_SAVE_BOOL(kill_switch)
 

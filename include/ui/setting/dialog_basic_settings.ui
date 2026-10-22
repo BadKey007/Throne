@@ -1866,6 +1866,16 @@ The local network stays reachable unless Private Range Bypass is turned off in T
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="xray_use_system_ca">
+         <property name="toolTip">
+          <string>Xray verifies servers only against its built-in root certificates. Turn this on to also trust the certificates installed in the system, such as a company or self-signed root. A profile or Xray config that sets useSystemCA itself keeps its own value.</string>
+         </property>
+         <property name="text">
+          <string>Trust System Certificates in Xray</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="skip_cert">
          <property name="text">
           <string>Skip TLS certificate authentication by default (allowInsecure)</string>

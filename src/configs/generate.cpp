@@ -1638,6 +1638,7 @@ namespace Configs {
                 object["tag"] = tag;
                 // Xray removed outbound-level proxySettings; sockopt.dialerProxy is its 1:1 replacement.
                 if (!nextTag.isEmpty() && (opts.link || bridgeConfig.needed)) SetXrayDialerProxy(object, nextTag);
+                if (dataManager->settingsRepo->xray_use_system_ca) UseXraySystemCA(object);
                 ctx.xrayOutbounds.append(object);
             }
             if (bridgeConfig.needed) {
@@ -1713,6 +1714,16 @@ namespace Configs {
                                                                      : userXrayConfig["inbounds"].toArray();
                 inbounds.prepend(bridgeInbound);
                 userXrayConfig["inbounds"] = inbounds;
+                if (dataManager->settingsRepo->xray_use_system_ca) {
+                    auto outbounds = userXrayConfig["outbounds"].toArray();
+                    for (qsizetype i = 0; i < outbounds.size(); ++i) {
+                        if (!outbounds[i].isObject()) continue;
+                        auto outbound = outbounds[i].toObject();
+                        UseXraySystemCA(outbound);
+                        outbounds[i] = outbound;
+                    }
+                    userXrayConfig["outbounds"] = outbounds;
+                }
 
                 ctx.result->xrayConfig = userXrayConfig;
                 ctx.result->isXrayNeeded = true;

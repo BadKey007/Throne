@@ -606,6 +606,14 @@ Release note:
         <source>The backup&apos;s database is damaged: %1</source>
         <translation>پایگاه دادهٔ پشتیبان آسیب دیده است: %1</translation>
     </message>
+    <message>
+        <source>Trust System Certificates in Xray</source>
+        <translation>اعتماد Xray به گواهی‌های سیستم</translation>
+    </message>
+    <message>
+        <source>Xray verifies servers only against its built-in root certificates. Turn this on to also trust the certificates installed in the system, such as a company or self-signed root. A profile or Xray config that sets useSystemCA itself keeps its own value.</source>
+        <translation>Xray سرورها را فقط با گواهی‌های ریشهٔ داخلی خودش بررسی می‌کند. با روشن کردن این گزینه، گواهی‌های نصب‌شده در سیستم، مانند گواهی ریشهٔ سازمانی یا خودامضا، نیز معتبر شمرده می‌شوند. پروفایل یا پیکربندی Xray که خودش useSystemCA را تعیین کرده باشد، مقدار خودش را نگه می‌دارد.</translation>
+    </message>
 </context>
 <context>
     <name>DialogEditGroup</name>
@@ -971,6 +979,158 @@ Release note:
     <message>
         <source>This profile was deleted while you were editing it.</source>
         <translation>این پروفایل در حین ویرایش شما حذف شد.</translation>
+    </message>
+    <message>
+        <source>Storage</source>
+        <translation>فضای ذخیره‌سازی</translation>
+    </message>
+    <message>
+        <source>Tuning</source>
+        <translation>تنظیم دقیق</translation>
+    </message>
+    <message>
+        <source>Service</source>
+        <translation>سرویس</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>پوشه</translation>
+    </message>
+    <message>
+        <source>Client ID</source>
+        <translation>شناسهٔ کلاینت</translation>
+    </message>
+    <message>
+        <source>Client Secret</source>
+        <translation>رمز کلاینت</translation>
+    </message>
+    <message>
+        <source>Refresh Token</source>
+        <translation>توکن تازه‌سازی</translation>
+    </message>
+    <message>
+        <source>Secrets</source>
+        <translation>رمزها</translation>
+    </message>
+    <message>
+        <source>Template</source>
+        <translation>قالب</translation>
+    </message>
+    <message>
+        <source>Front Address</source>
+        <translation>نشانی جلویی</translation>
+    </message>
+    <message>
+        <source>Front Port</source>
+        <translation>درگاه جلویی</translation>
+    </message>
+    <message>
+        <source>Segment Bytes</source>
+        <translation>بایت هر بخش</translation>
+    </message>
+    <message>
+        <source>Flush Interval</source>
+        <translation>فاصلهٔ ارسال</translation>
+    </message>
+    <message>
+        <source>Poll Interval</source>
+        <translation>فاصلهٔ بررسی</translation>
+    </message>
+    <message>
+        <source>Max Poll Interval</source>
+        <translation>بیشینهٔ فاصلهٔ بررسی</translation>
+    </message>
+    <message>
+        <source>Eager Window</source>
+        <translation>پنجرهٔ بررسی فعال</translation>
+    </message>
+    <message>
+        <source>Hole Timeout</source>
+        <translation>مهلت بخش گم‌شده</translation>
+    </message>
+    <message>
+        <source>Session TTL</source>
+        <translation>عمر نشست</translation>
+    </message>
+    <message>
+        <source>Concurrency</source>
+        <translation>هم‌زمانی</translation>
+    </message>
+    <message>
+        <source>Google Drive folder ID</source>
+        <translation>شناسهٔ پوشهٔ Google Drive</translation>
+    </message>
+    <message>
+        <source>A directory path</source>
+        <translation>مسیر یک پوشه</translation>
+    </message>
+    <message>
+        <source>Where both ends exchange the stream: google-drive uses a Google Drive folder, template any HTTP storage API described by Template, local a folder on this machine.</source>
+        <translation>جایی که دو طرف جریان را مبادله می‌کنند: google-drive از یک پوشهٔ Google Drive استفاده می‌کند، template از هر API ذخیره‌سازی HTTP که در قالب توصیف شده باشد، و local از پوشه‌ای روی همین دستگاه.</translation>
+    </message>
+    <message>
+        <source>google-drive: the folder ID. local: a directory path. template: read as {folder}.</source>
+        <translation>google-drive: شناسهٔ پوشه. local: مسیر یک پوشه. template: به‌صورت {folder} خوانده می‌شود.</translation>
+    </message>
+    <message>
+        <source>The Google Drive OAuth client ID.</source>
+        <translation>شناسهٔ کلاینت OAuth برای Google Drive.</translation>
+    </message>
+    <message>
+        <source>The Google Drive OAuth client secret.</source>
+        <translation>رمز کلاینت OAuth برای Google Drive.</translation>
+    </message>
+    <message>
+        <source>The OAuth refresh token for the Google account that owns the folder.</source>
+        <translation>توکن تازه‌سازی OAuth برای حساب Google که مالک پوشه است.</translation>
+    </message>
+    <message>
+        <source>Values the template reads as {secret0}, {secret1}, …, separated by commas.</source>
+        <translation>مقدارهایی که قالب به‌صورت {secret0}، {secret1}، … می‌خواند، جداشده با ویرگول.</translation>
+    </message>
+    <message>
+        <source>The storage API&apos;s auth, put, get, list and delete operations, as JSON.</source>
+        <translation>عملیات auth، put، get، list و delete در API ذخیره‌سازی، به‌صورت JSON.</translation>
+    </message>
+    <message>
+        <source>Optional domain front: the storage API is dialed at this address while TLS still names the API host.</source>
+        <translation>دامنهٔ جلویی اختیاری: اتصال به API ذخیره‌سازی از طریق این نشانی برقرار می‌شود، در حالی که TLS همچنان نام میزبان API را می‌برد.</translation>
+    </message>
+    <message>
+        <source>Port of the front address. Default: 443.</source>
+        <translation>درگاه نشانی جلویی. پیش‌فرض: 443.</translation>
+    </message>
+    <message>
+        <source>Largest upload per file, in bytes. Default: 524288; Xray caps it at 16 MiB.</source>
+        <translation>بیشترین حجم بارگذاری در هر فایل، بر حسب بایت. پیش‌فرض: 524288؛ Xray آن را حداکثر ۱۶ مبی‌بایت می‌کند.</translation>
+    </message>
+    <message>
+        <source>How long writes are gathered before an upload, in milliseconds. Default: 20.</source>
+        <translation>مدت جمع‌آوری نوشته‌ها پیش از بارگذاری، بر حسب میلی‌ثانیه. پیش‌فرض: 20.</translation>
+    </message>
+    <message>
+        <source>Shortest wait between checks for new files, in milliseconds. Default: 50.</source>
+        <translation>کوتاه‌ترین فاصله میان بررسی فایل‌های تازه، بر حسب میلی‌ثانیه. پیش‌فرض: 50.</translation>
+    </message>
+    <message>
+        <source>Longest wait between checks while the stream is idle, in milliseconds. Default: 500.</source>
+        <translation>بلندترین فاصله میان بررسی‌ها هنگامی که جریان بیکار است، بر حسب میلی‌ثانیه. پیش‌فرض: 500.</translation>
+    </message>
+    <message>
+        <source>How long after traffic polling stays at the shortest wait, in milliseconds. Default: 2000.</source>
+        <translation>مدتی که پس از ترافیک، بررسی با کوتاه‌ترین فاصله ادامه می‌یابد، بر حسب میلی‌ثانیه. پیش‌فرض: 2000.</translation>
+    </message>
+    <message>
+        <source>How long a missing segment is waited for before the stream fails, in milliseconds. Default: 30000.</source>
+        <translation>مدت انتظار برای یک بخش گم‌شده پیش از شکست جریان، بر حسب میلی‌ثانیه. پیش‌فرض: 30000.</translation>
+    </message>
+    <message>
+        <source>How long an idle session lives before its files are cleaned up, in seconds. Default: 300.</source>
+        <translation>مدت زنده ماندن یک نشست بیکار پیش از پاک شدن فایل‌هایش، بر حسب ثانیه. پیش‌فرض: 300.</translation>
+    </message>
+    <message>
+        <source>Parallel storage requests per stream. Default: 8; Xray caps it at 64.</source>
+        <translation>درخواست‌های هم‌زمان به فضای ذخیره‌سازی در هر جریان. پیش‌فرض: 8؛ Xray آن را حداکثر 64 می‌کند.</translation>
     </message>
 </context>
 <context>

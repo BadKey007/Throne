@@ -287,6 +287,7 @@ set(PROJECT_SOURCES
         src/ui/profile/dialog_edit_profile_singbox.cpp
         src/ui/profile/dialog_edit_profile_xray.cpp
         src/ui/profile/dialog_edit_profile_xhttp.cpp
+        src/ui/profile/dialog_edit_profile_xdrive.cpp
         include/ui/profile/dialog_edit_profile.ui
         include/ui/group/dialog_edit_group.h
         src/ui/group/dialog_edit_group.cpp

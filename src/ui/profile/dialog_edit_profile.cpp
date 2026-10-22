@@ -403,6 +403,7 @@ void DialogEditProfile::editor_cache_updated_impl() {
     setCacheButtonText(ui->certificate_edit, !CACHE.certificate.isEmpty());
     setCacheButtonText(ui->xray_downloadsettings_edit, !CACHE.XrayDownloadSettings.isEmpty());
     setCacheButtonText(ui->xray_finalmask_edit, !CACHE.XrayFinalmask.isEmpty());
+    setCacheButtonText(ui->xray_xdrive_template_edit, !CACHE.XrayXDriveTemplate.isEmpty());
     for (const auto &[button, value]: innerEditor->get_editor_cached()) {
         setCacheButtonText(button, !value.isEmpty());
     }

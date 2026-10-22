@@ -56,11 +56,15 @@ namespace Configs {
     }
 
     BuildResult xrayMultiplex::Build() {
+        return {BuildMux(Configs::dataManager->settingsRepo->xray_mux_default_on), ""};
+    }
+
+    QJsonObject xrayMultiplex::BuildMux(bool defaultOn) {
         auto obj = ExportToJson();
-        if (useDefault && Configs::dataManager->settingsRepo->xray_mux_default_on) obj["enabled"] = true;
-        if (!obj["enabled"].toBool()) return {{}, ""};
+        if (useDefault && defaultOn) obj["enabled"] = true;
+        if (!obj["enabled"].toBool()) return {};
         if (Configs::dataManager->settingsRepo->xray_mux_concurrency > 0 && concurrency <= 0) obj["concurrency"] = Configs::dataManager->settingsRepo->xray_mux_concurrency;
         if (xudpConcurrency > 0) obj["xudpConcurrency"] = xudpConcurrency;
-        return {obj, ""};
+        return obj;
     }
 }

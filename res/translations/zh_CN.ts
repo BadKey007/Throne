@@ -1341,6 +1341,14 @@ Throne will restart to complete the restore.</source>
         <source>The backup&apos;s database is damaged: %1</source>
         <translation>备份中的数据库已损坏：%1</translation>
     </message>
+    <message>
+        <source>Trust System Certificates in Xray</source>
+        <translation>Xray 信任系统证书</translation>
+    </message>
+    <message>
+        <source>Xray verifies servers only against its built-in root certificates. Turn this on to also trust the certificates installed in the system, such as a company or self-signed root. A profile or Xray config that sets useSystemCA itself keeps its own value.</source>
+        <translation>Xray 仅使用内置根证书验证服务器。开启后还会信任系统中安装的证书，例如公司或自签名根证书。自行设置了 useSystemCA 的配置文件或 Xray 配置保留其自身的值。</translation>
+    </message>
 </context>
 <context>
     <name>DialogEditGroup</name>
@@ -2563,6 +2571,158 @@ Throne will restart to complete the restore.</source>
     <message>
         <source>This profile was deleted while you were editing it.</source>
         <translation>此配置在您编辑时已被删除。</translation>
+    </message>
+    <message>
+        <source>Storage</source>
+        <translation>存储</translation>
+    </message>
+    <message>
+        <source>Tuning</source>
+        <translation>调优</translation>
+    </message>
+    <message>
+        <source>Service</source>
+        <translation>服务</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>文件夹</translation>
+    </message>
+    <message>
+        <source>Client ID</source>
+        <translation>客户端 ID</translation>
+    </message>
+    <message>
+        <source>Client Secret</source>
+        <translation>客户端密钥</translation>
+    </message>
+    <message>
+        <source>Refresh Token</source>
+        <translation>刷新令牌</translation>
+    </message>
+    <message>
+        <source>Secrets</source>
+        <translation>密钥</translation>
+    </message>
+    <message>
+        <source>Template</source>
+        <translation>模板</translation>
+    </message>
+    <message>
+        <source>Front Address</source>
+        <translation>前置地址</translation>
+    </message>
+    <message>
+        <source>Front Port</source>
+        <translation>前置端口</translation>
+    </message>
+    <message>
+        <source>Segment Bytes</source>
+        <translation>分段字节数</translation>
+    </message>
+    <message>
+        <source>Flush Interval</source>
+        <translation>刷新间隔</translation>
+    </message>
+    <message>
+        <source>Poll Interval</source>
+        <translation>轮询间隔</translation>
+    </message>
+    <message>
+        <source>Max Poll Interval</source>
+        <translation>最大轮询间隔</translation>
+    </message>
+    <message>
+        <source>Eager Window</source>
+        <translation>积极轮询窗口</translation>
+    </message>
+    <message>
+        <source>Hole Timeout</source>
+        <translation>缺段超时</translation>
+    </message>
+    <message>
+        <source>Session TTL</source>
+        <translation>会话存活时间</translation>
+    </message>
+    <message>
+        <source>Concurrency</source>
+        <translation>并发数</translation>
+    </message>
+    <message>
+        <source>Google Drive folder ID</source>
+        <translation>Google Drive 文件夹 ID</translation>
+    </message>
+    <message>
+        <source>A directory path</source>
+        <translation>目录路径</translation>
+    </message>
+    <message>
+        <source>Where both ends exchange the stream: google-drive uses a Google Drive folder, template any HTTP storage API described by Template, local a folder on this machine.</source>
+        <translation>双方交换数据流的位置：google-drive 使用 Google Drive 文件夹，template 使用模板所描述的任意 HTTP 存储 API，local 使用本机上的文件夹。</translation>
+    </message>
+    <message>
+        <source>google-drive: the folder ID. local: a directory path. template: read as {folder}.</source>
+        <translation>google-drive：文件夹 ID。local：目录路径。template：作为 {folder} 读取。</translation>
+    </message>
+    <message>
+        <source>The Google Drive OAuth client ID.</source>
+        <translation>Google Drive 的 OAuth 客户端 ID。</translation>
+    </message>
+    <message>
+        <source>The Google Drive OAuth client secret.</source>
+        <translation>Google Drive 的 OAuth 客户端密钥。</translation>
+    </message>
+    <message>
+        <source>The OAuth refresh token for the Google account that owns the folder.</source>
+        <translation>拥有该文件夹的 Google 账号的 OAuth 刷新令牌。</translation>
+    </message>
+    <message>
+        <source>Values the template reads as {secret0}, {secret1}, …, separated by commas.</source>
+        <translation>模板以 {secret0}、{secret1}… 读取的值，用逗号分隔。</translation>
+    </message>
+    <message>
+        <source>The storage API&apos;s auth, put, get, list and delete operations, as JSON.</source>
+        <translation>存储 API 的 auth、put、get、list 和 delete 操作，以 JSON 表示。</translation>
+    </message>
+    <message>
+        <source>Optional domain front: the storage API is dialed at this address while TLS still names the API host.</source>
+        <translation>可选的域前置：通过此地址连接存储 API，而 TLS 仍使用 API 的主机名。</translation>
+    </message>
+    <message>
+        <source>Port of the front address. Default: 443.</source>
+        <translation>前置地址的端口。默认：443。</translation>
+    </message>
+    <message>
+        <source>Largest upload per file, in bytes. Default: 524288; Xray caps it at 16 MiB.</source>
+        <translation>每个文件的最大上传量，单位为字节。默认：524288；Xray 将其上限设为 16 MiB。</translation>
+    </message>
+    <message>
+        <source>How long writes are gathered before an upload, in milliseconds. Default: 20.</source>
+        <translation>上传前收集写入数据的时长，单位为毫秒。默认：20。</translation>
+    </message>
+    <message>
+        <source>Shortest wait between checks for new files, in milliseconds. Default: 50.</source>
+        <translation>检查新文件的最短间隔，单位为毫秒。默认：50。</translation>
+    </message>
+    <message>
+        <source>Longest wait between checks while the stream is idle, in milliseconds. Default: 500.</source>
+        <translation>数据流空闲时检查的最长间隔，单位为毫秒。默认：500。</translation>
+    </message>
+    <message>
+        <source>How long after traffic polling stays at the shortest wait, in milliseconds. Default: 2000.</source>
+        <translation>有流量后保持最短轮询间隔的时长，单位为毫秒。默认：2000。</translation>
+    </message>
+    <message>
+        <source>How long a missing segment is waited for before the stream fails, in milliseconds. Default: 30000.</source>
+        <translation>在数据流失败前等待缺失分段的时长，单位为毫秒。默认：30000。</translation>
+    </message>
+    <message>
+        <source>How long an idle session lives before its files are cleaned up, in seconds. Default: 300.</source>
+        <translation>空闲会话在其文件被清理前的存活时长，单位为秒。默认：300。</translation>
+    </message>
+    <message>
+        <source>Parallel storage requests per stream. Default: 8; Xray caps it at 64.</source>
+        <translation>每个数据流的并行存储请求数。默认：8；Xray 将其上限设为 64。</translation>
     </message>
 </context>
 <context>
