@@ -326,6 +326,9 @@ namespace Configs {
         // Xray
         QString xray_log_level = "warning";
         int xray_mux_concurrency = 8;
+        int xray_mux_max_connections = 0;
+        int xray_mux_xudp_concurrency = 16;
+        QString xray_mux_xudp_proxy_udp443 = "reject";
         bool xray_mux_default_on = false;
         // Xray otherwise trusts only its built-in root certificates.
         bool xray_use_system_ca = false;

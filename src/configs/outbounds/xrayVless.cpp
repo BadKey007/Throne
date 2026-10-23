@@ -190,6 +190,12 @@ namespace Configs {
         // Xray refuses XDRIVE without Mux, so Keep Default turns it on there.
         const bool muxRequired = NormalizeXrayNetwork(streamSetting->network) == "xdrive";
         if (auto muxObj = multiplex->BuildMux(muxRequired || Configs::dataManager->settingsRepo->xray_mux_default_on); !muxObj.isEmpty()) {
+            // It also refuses any traffic leaving the mux there, which a preset may ask for.
+            if (muxRequired) {
+                if (muxObj["concurrency"].toInt() < 0) muxObj.remove("concurrency");
+                if (muxObj["xudpConcurrency"].toInt() < 0) muxObj.remove("xudpConcurrency");
+                if (muxObj["xudpProxyUDP443"].toString() == "skip") muxObj.remove("xudpProxyUDP443");
+            }
             object["mux"] = muxObj;
         }
         return {object, ""};
@@ -248,5 +254,6 @@ namespace Configs {
         if (auto message = Checks::XrayXDriveMux(multiplex->getMuxState(), streamSetting->network); !message.isEmpty()) {
             issues.append({Severity::Error, "mux", message});
         }
+        multiplex->Validate(issues);
     }
 }

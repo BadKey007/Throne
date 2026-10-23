@@ -5,6 +5,7 @@
 
 #include "ui_dialog_edit_profile.h"
 #include "include/configs/common/multiplex.h"
+#include "include/configs/common/xrayMultiplex.h"
 #include "include/database/entities/Profile.h"
 #include "include/engine/EditLocks.h"
 
@@ -56,6 +57,7 @@ private:
         QJsonObject XrayXDriveTemplate;
         // Saved into the profile only while Multiplex is Custom.
         Configs::MuxSettings mux;
+        Configs::XrayMuxSettings xrayMux;
     } CACHE;
 
     // dialog_edit_profile.cpp: profile type, protocol editor, common fields, layout

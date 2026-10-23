@@ -5,6 +5,7 @@
 #include "include/database/DatabaseManager.h"
 #include "include/global/Utils.hpp"
 #include "include/ui/utils/ValidationForm.h"
+#include "include/ui/widget/MuxSettingsWidget.h"
 #include "include/ui/widget/json/JsonEditorDialog.h"
 
 #include <QSignalBlocker>
@@ -35,6 +36,10 @@ void DialogEditProfile::setupXrayStream() {
     connect(ui->xray_security, &QComboBox::currentTextChanged, this, [this] { relayout(); });
     connect(ui->xray_mode, &QComboBox::currentTextChanged, this, [this] { relayout(); });
     connect(ui->xray_xpadding_obfs_mode, &QCheckBox::toggled, this, [this] { relayout(); });
+    connect(ui->xray_mux, &QComboBox::currentIndexChanged, this, [this] { relayout(); });
+    connect(ui->xray_mux_custom, &QPushButton::clicked, this, [this] {
+        XrayMuxSettingsWidget::openDialog(this, CACHE.xrayMux, [this](const Configs::XrayMuxSettings &settings) { CACHE.xrayMux = settings; });
+    });
     bindXrayStream();
 }
 
@@ -101,7 +106,9 @@ void DialogEditProfile::loadXrayStream() {
     loadXrayNetwork(ui->xray_network->currentText());
     if (const auto security = stream->security.toLower(); security != "none") keepXrayComboValue(ui->xray_security, security);
     selectComboText(ui->xray_security, stream->security.toLower());
-    ui->xray_mux->setCurrentIndex(ent->outbound->GetXrayMultiplex()->getMuxState());
+    const auto mux = ent->outbound->GetXrayMultiplex();
+    ui->xray_mux->setCurrentIndex(mux->getMuxState());
+    CACHE.xrayMux = mux->CustomSettings();
 
     const bool tls = stream->security == "tls";
     ui->xray_sni->setText(tls ? stream->TLS->serverName : stream->reality->serverName);
@@ -152,7 +159,10 @@ void DialogEditProfile::saveXrayStream() {
     stream->network = ui->xray_network->currentText().trimmed();
     stream->security = ui->xray_security->currentText().trimmed();
     stream->finalmask = CACHE.XrayFinalmask;
-    ent->outbound->GetXrayMultiplex()->saveMuxState(ui->xray_mux->currentIndex());
+    const auto mux = ent->outbound->GetXrayMultiplex();
+    const int muxState = ui->xray_mux->currentIndex();
+    mux->saveMuxState(muxState);
+    if (muxState == Configs::kXrayMuxCustom) mux->SetCustomSettings(CACHE.xrayMux);
 
     const auto sni = ui->xray_sni->text().trimmed();
     const auto fingerprint = ui->xray_fp->currentText().trimmed();
@@ -224,6 +234,7 @@ void DialogEditProfile::updateXrayRows() {
     setRowVisible(ui->xray_ed_label, ui->xray_ed_length, !xhttp && !grpc);
     setRowVisible(ui->xray_headers_l, ui->xray_headers, !grpc);
     ui->xray_multi_mode->setVisible(grpc);
+    ui->xray_mux_custom->setVisible(ui->xray_mux->currentIndex() == Configs::kXrayMuxCustom);
     updateXrayXHTTPControls();
     updateXrayXDriveControls();
 
