@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QMenu>
 
+#include "include/ui/app/dialog_about.h"
 #include "include/ui/group/dialog_manage_groups.h"
 #include "include/ui/mainWindow/MainWindowInternal.h"
 #include "include/ui/setting/dialog_basic_settings.h"
@@ -37,6 +38,7 @@ void MainWindow::createCommandPalette() {
         {DialogManageGroups::staticMetaObject.className(), ui->menu_manage_groups},
         {DialogOtpManager::staticMetaObject.className(), ui->menu_otp_manager},
         {DialogTrafficStats::staticMetaObject.className(), ui->actionTraffic_Stats},
+        {DialogAbout::staticMetaObject.className(), ui->actionAbout},
     };
 
     commandPalette = new CommandPalette(this,
@@ -82,21 +84,27 @@ void MainWindow::showCommandPalette() {
     if (!commandPalette) createCommandPalette();
 
     // Only one of these dialogs opens at a time: while one is open, the others' entries say which one to close.
-    QString openClass;
-    QString closeFirst;
-    if (dialog_is_using) {
-        closeFirst = tr("close the open settings window first");
+    // The palette stays open beside the main window and asks again each time setDialogInUse() flips the slot.
+    commandPalette->present([this]() -> CommandPalette::Blocker {
+        if (!dialog_is_using) return {};
+        QString openClass;
+        QString closeFirst = tr("close the open settings window first");
         for (auto *dialog : findChildren<QDialog *>(QString(), Qt::FindDirectChildrenOnly)) {
             if (!dialog->isVisible() || !settingsDialogOpeners.contains(QLatin1String(dialog->metaObject()->className()))) continue;
             openClass = dialog->metaObject()->className();
             closeFirst = tr("close \"%1\" first").arg(dialog->windowTitle());
             break;
         }
-    }
-    commandPalette->present([openers = settingsDialogOpeners, openClass, closeFirst](const QAction *action) {
-        const QString dialogClass = openers.key(const_cast<QAction *>(action));
-        return closeFirst.isEmpty() || dialogClass.isEmpty() || dialogClass == openClass ? QString() : closeFirst;
+        return [openers = settingsDialogOpeners, openClass, closeFirst](const QAction *action) {
+            const QString dialogClass = openers.key(const_cast<QAction *>(action));
+            return dialogClass.isEmpty() || dialogClass == openClass ? QString() : closeFirst;
+        };
     });
+}
+
+void MainWindow::setDialogInUse(bool inUse) {
+    dialog_is_using = inUse;
+    if (commandPalette) commandPalette->blockersChanged();
 }
 
 void MainWindow::revealSetting(const SettingsIndex::Item &item) {
