@@ -228,6 +228,38 @@ Outbound: %4</source>
     </message>
 </context>
 <context>
+    <name>DialogUpdate</name>
+    <message>
+        <source>Update (Pre-release)</source>
+        <translation>更新（预发布）</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation>更新</translation>
+    </message>
+    <message>
+        <source>Throne %1 is available, you are using %2.</source>
+        <translation>Throne %1 已发布，当前版本为 %2。</translation>
+    </message>
+    <message>
+        <source>Release notes are unavailable.</source>
+        <translation>无法获取更新日志。</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <comment>button</comment>
+        <translation>更新</translation>
+    </message>
+    <message>
+        <source>Open in browser</source>
+        <translation>在浏览器中打开</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+</context>
+<context>
     <name>DialogAutoSelector</name>
     <message>
         <location filename="Throne-1.3.1/src/ui/stats/dialog_auto_selector.cpp" line="111"/>
@@ -10945,25 +10977,6 @@ How to update?</source>
         <location filename="Throne-1.3.1/src/ui/mainWindow/mainwindow_system.cpp" line="597"/>
         <source>No update</source>
         <translation>无更新</translation>
-    </message>
-    <message>
-        <location filename="Throne-1.3.1/src/ui/mainWindow/mainwindow_system.cpp" line="605"/>
-        <source>Update found: %1
-Release note:
-%2</source>
-        <translation>发现更新: %1
-更新日志:
-%2</translation>
-    </message>
-    <message>
-        <location filename="Throne-1.3.1/src/ui/mainWindow/mainwindow_system.cpp" line="610"/>
-        <source>Open in browser</source>
-        <translation>浏览器中打开</translation>
-    </message>
-    <message>
-        <location filename="Throne-1.3.1/src/ui/mainWindow/mainwindow_system.cpp" line="611"/>
-        <source>Close</source>
-        <translation>关闭</translation>
     </message>
     <message>
         <location filename="Throne-1.3.1/src/ui/mainWindow/mainwindow_system.cpp" line="632"/>

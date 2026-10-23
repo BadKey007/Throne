@@ -175,22 +175,6 @@ Deleted %3 Profiles:
         <translation type="unfinished">بدون بروزرسانی جدید</translation>
     </message>
     <message>
-        <source>Update found: %1
-Release note:
-%2</source>
-        <translation type="unfinished">به‌روزرسانی یافت شد: %1
-یادداشت انتشار:
-%2</translation>
-    </message>
-    <message>
-        <source>Open in browser</source>
-        <translation type="unfinished">در مرور گر باز شود</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="unfinished">بستن</translation>
-    </message>
-    <message>
         <source>Update is ready, restart to install?</source>
         <translation type="unfinished">به روز رسانی آماده است، برای نصب مجدد راه اندازی شود؟</translation>
     </message>
@@ -252,6 +236,38 @@ Release note:
     <message>
         <source>Unknown</source>
         <translation>نامشخص</translation>
+    </message>
+</context>
+<context>
+    <name>DialogUpdate</name>
+    <message>
+        <source>Update (Pre-release)</source>
+        <translation>به‌روزرسانی (پیش‌انتشار)</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation>به‌روزرسانی</translation>
+    </message>
+    <message>
+        <source>Throne %1 is available, you are using %2.</source>
+        <translation>نسخه %1 از Throne در دسترس است، نسخه فعلی شما %2 است.</translation>
+    </message>
+    <message>
+        <source>Release notes are unavailable.</source>
+        <translation>یادداشت‌های انتشار در دسترس نیست.</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <comment>button</comment>
+        <translation>به‌روزرسانی</translation>
+    </message>
+    <message>
+        <source>Open in browser</source>
+        <translation>باز کردن در مرورگر</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>بستن</translation>
     </message>
 </context>
 <context>
