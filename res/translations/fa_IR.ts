@@ -232,6 +232,29 @@ Release note:
     </message>
 </context>
 <context>
+    <name>DialogAbout</name>
+    <message>
+        <source>About Throne</source>
+        <translation>درباره Throne</translation>
+    </message>
+    <message>
+        <source>Version:</source>
+        <translation>نسخه:</translation>
+    </message>
+    <message>
+        <source>Open-source and cross platform Desktop Proxy management utility developed as a successor to Nekoray.</source>
+        <translation>ابزار متن‌باز و چندسکویی مدیریت پروکسی برای دسکتاپ که به‌عنوان جانشین Nekoray توسعه یافته است.</translation>
+    </message>
+    <message>
+        <source>Support Throne</source>
+        <translation>حمایت از Throne</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>نامشخص</translation>
+    </message>
+</context>
+<context>
     <name>DialogBasicSettings</name>
     <message>
         <source>Basic Settings</source>
@@ -2952,6 +2975,14 @@ Error: %1</source>
     <message>
         <source>Kill switch is blocking traffic</source>
         <translation>Kill switch در حال مسدود کردن ترافیک است</translation>
+    </message>
+    <message>
+        <source>Check For Update</source>
+        <translation>بررسی به‌روزرسانی</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>درباره</translation>
     </message>
 </context>
 <context>

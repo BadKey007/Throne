@@ -210,6 +210,29 @@ Outbound: %4</translation>
     </message>
 </context>
 <context>
+    <name>DialogAbout</name>
+    <message>
+        <source>About Throne</source>
+        <translation>О Throne</translation>
+    </message>
+    <message>
+        <source>Version:</source>
+        <translation>Версия:</translation>
+    </message>
+    <message>
+        <source>Open-source and cross platform Desktop Proxy management utility developed as a successor to Nekoray.</source>
+        <translation>Кроссплатформенная утилита с открытым исходным кодом для управления прокси на компьютере, созданная как преемник Nekoray.</translation>
+    </message>
+    <message>
+        <source>Support Throne</source>
+        <translation>Поддержать Throne</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Неизвестно</translation>
+    </message>
+</context>
+<context>
     <name>DialogAutoSelector</name>
     <message>
         <source>Auto Selector Stats</source>
@@ -9820,6 +9843,10 @@ Name: %1</source>
     <message>
         <source>close &quot;%1&quot; first</source>
         <translation>сначала закройте «%1»</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>О программе</translation>
     </message>
 </context>
 <context>
