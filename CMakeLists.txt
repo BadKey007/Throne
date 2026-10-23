@@ -95,6 +95,8 @@ set(PROJECT_SOURCES
         src/main.cpp
         src/global/Configs.cpp
         src/global/Utils.cpp
+        include/global/LogBuffer.hpp
+        src/global/LogBuffer.cpp
         include/global/Validation.hpp
         src/global/Validation.cpp
         include/global/Logger.hpp
@@ -157,6 +159,7 @@ set(PROJECT_SOURCES
         src/api/remote/RouterTests.cpp
         src/api/remote/RouterManage.cpp
         src/api/remote/RouterBackup.cpp
+        src/api/remote/RouterFeeds.cpp
 
         src/stats/traffic/TrafficLooper.cpp
         include/stats/traffic/TrafficLine.hpp

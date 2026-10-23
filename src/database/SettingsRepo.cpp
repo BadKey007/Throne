@@ -399,6 +399,7 @@ namespace Configs {
 
     bool SettingsRepo::Save() {
         saveAllSettings();
+        ++revision;
         return true;
     }
 

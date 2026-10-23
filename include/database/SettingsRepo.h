@@ -28,6 +28,7 @@ namespace Configs {
         QMap<QString, int*>         intMap;
         QMap<QString, QString*>     stringMap;
         QMap<QString, QStringList*> stringListMap;
+        std::atomic<quint64> revision{0};
 
         void initMaps();
         void createTables() const;
@@ -41,6 +42,9 @@ namespace Configs {
         
         bool Save();
         
+        // Any thread; moves with every Save(), bookkeeping ones such as the traffic graph's state included.
+        quint64 Revision() const { return revision.load(); }
+
         // Runtime state and flags below are never persisted.
         QString core_socket_name = "";
         int started_id = NoProfileId;
