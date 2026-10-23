@@ -223,18 +223,21 @@ jobs:
             launcher: ccache
           - platform: macos-latest
             qt_version: "6.12.0"
+            osx_target: "14.4"
             target: x86_64
             dest_suffix: darwin-amd64
             common: darwin-amd64
             launcher: ccache
           - platform: macos-latest
             qt_version: "6.12.0"
+            osx_target: "14.4"
             target: arm64
             dest_suffix: darwin-arm64
             common: darwin-arm64
             launcher: ccache
           - platform: macos-15
             qt_version: "6.4.3"
+            osx_target: "10.15"
             target: x86_64
             dest_suffix: darwinlegacy-amd64
             common: darwinlegacy-amd64
@@ -366,7 +369,7 @@ jobs:
           mkdir build
           cd build
           curl -fLso srslist.h "https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/srslist.h"
-          cmake -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DNKR_PACKAGE_MACOS=1 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -DCMAKE_OSX_ARCHITECTURES=${{ matrix.target }} $LAUNCHER_ARGS ..
+          cmake -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DNKR_PACKAGE_MACOS=1 -DCMAKE_OSX_DEPLOYMENT_TARGET=${{ matrix.osx_target }} -DCMAKE_OSX_ARCHITECTURES=${{ matrix.target }} $LAUNCHER_ARGS ..
           ninja
           cd ..
           ./script/deploy_macos.sh

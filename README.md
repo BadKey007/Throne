@@ -46,7 +46,7 @@ sudo zypper install throne
 Arch Linux (AUR): `yay -S throne` or `paru -S throne`
 
 ### macOS (Homebrew)
-Every stable release is also published to Throne's own Homebrew tap (macOS 13 or newer, Apple Silicon and Intel). The cask installs `Throne.app` to `/Applications` and removes the quarantine flag; update with `brew upgrade --cask throne`. See the [installation guide](https://throneproj.github.io/get_started/installation/#homebrew) for details.
+Every stable release is also published to Throne's own Homebrew tap (macOS 14.4 or newer, Apple Silicon and Intel). The cask installs `Throne.app` to `/Applications` and removes the quarantine flag; update with `brew upgrade --cask throne`. See the [installation guide](https://throneproj.github.io/get_started/installation/#homebrew) for details.
 ```bash
 brew install --cask throneproj/tap/throne
 ```
