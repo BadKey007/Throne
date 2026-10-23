@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fa_IR" sourcelanguage="en">
 <context>
+    <name>CommandPalette</name>
+    <message>
+        <source>Settings in Advanced mode</source>
+        <translation>تنظیمات حالت پیشرفته</translation>
+    </message>
+</context>
+<context>
     <name>ConnectionsTreeModel</name>
     <message>
         <source>Close this connection</source>
@@ -652,6 +659,22 @@ Deleted %3 Profiles:
     <message>
         <source>Xray verifies servers only against its built-in root certificates. Turn this on to also trust the certificates installed in the system, such as a company or self-signed root. A profile or Xray config that sets useSystemCA itself keeps its own value.</source>
         <translation>Xray سرورها را فقط با گواهی‌های ریشهٔ داخلی خودش بررسی می‌کند. با روشن کردن این گزینه، گواهی‌های نصب‌شده در سیستم، مانند گواهی ریشهٔ سازمانی یا خودامضا، نیز معتبر شمرده می‌شوند. پروفایل یا پیکربندی Xray که خودش useSystemCA را تعیین کرده باشد، مقدار خودش را نگه می‌دارد.</translation>
+    </message>
+    <message>
+        <source>Interface</source>
+        <translation>رابط کاربری</translation>
+    </message>
+    <message>
+        <source>Simple hides the advanced options. They keep their values and still apply.</source>
+        <translation>حالت ساده گزینه‌های پیشرفته را پنهان می‌کند. مقدارشان حفظ می‌شود و همچنان اعمال می‌شوند.</translation>
+    </message>
+    <message>
+        <source>Simple</source>
+        <translation>ساده</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation>پیشرفته</translation>
     </message>
 </context>
 <context>
@@ -1480,6 +1503,10 @@ For more information, see the document &quot;Configuration/DNS&quot;.</source>
     <message>
         <source>Local Override</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WARP has no config yet: click Generate Warp Config.</source>
+        <translation>WARP هنوز پیکربندی ندارد: روی «Generate Warp Config» کلیک کنید.</translation>
     </message>
 </context>
 <context>
@@ -2999,6 +3026,14 @@ Error: %1</source>
     <message>
         <source>About</source>
         <translation>درباره</translation>
+    </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>حالت پیشرفته</translation>
+    </message>
+    <message>
+        <source>Show every option. Simple mode hides the advanced ones; they keep their values and still apply.</source>
+        <translation>همه گزینه‌ها را نشان می‌دهد. حالت ساده گزینه‌های پیشرفته را پنهان می‌کند؛ مقدارشان حفظ می‌شود و همچنان اعمال می‌شوند.</translation>
     </message>
 </context>
 <context>

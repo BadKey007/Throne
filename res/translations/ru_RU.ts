@@ -35,6 +35,10 @@
         <source> (off)</source>
         <translation> (выкл.)</translation>
     </message>
+    <message>
+        <source>Settings in Advanced mode</source>
+        <translation>Настройки в расширенном режиме</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsFilterHeader</name>
@@ -1290,6 +1294,22 @@ Throne will restart to complete the restore.</source>
     <message>
         <source>Xray verifies servers only against its built-in root certificates. Turn this on to also trust the certificates installed in the system, such as a company or self-signed root. A profile or Xray config that sets useSystemCA itself keeps its own value.</source>
         <translation>Xray проверяет серверы только по встроенным корневым сертификатам. Включите, чтобы доверять и сертификатам, установленным в системе, например корпоративному или самоподписанному корневому. Профиль или конфигурация Xray, где useSystemCA задан явно, сохраняет своё значение.</translation>
+    </message>
+    <message>
+        <source>Interface</source>
+        <translation>Интерфейс</translation>
+    </message>
+    <message>
+        <source>Simple hides the advanced options. They keep their values and still apply.</source>
+        <translation>Простой режим скрывает дополнительные параметры. Их значения сохраняются и продолжают действовать.</translation>
+    </message>
+    <message>
+        <source>Simple</source>
+        <translation>Простой</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation>Расширенный</translation>
     </message>
 </context>
 <context>
@@ -3784,6 +3804,10 @@ A domain listed with only one address family is answered NXDOMAIN for the other,
     <message>
         <source>Add these remote routing profiles?</source>
         <translation>Добавить эти удалённые профили маршрутизации?</translation>
+    </message>
+    <message>
+        <source>WARP has no config yet: click Generate Warp Config.</source>
+        <translation>У WARP ещё нет конфигурации: нажмите «Сгенерировать конфигурацию Warp».</translation>
     </message>
 </context>
 <context>
@@ -9879,6 +9903,14 @@ Name: %1</source>
     <message>
         <source>About</source>
         <translation>О программе</translation>
+    </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>Расширенный режим</translation>
+    </message>
+    <message>
+        <source>Show every option. Simple mode hides the advanced ones; they keep their values and still apply.</source>
+        <translation>Показывать все параметры. Простой режим скрывает дополнительные, но их значения сохраняются и продолжают действовать.</translation>
     </message>
 </context>
 <context>

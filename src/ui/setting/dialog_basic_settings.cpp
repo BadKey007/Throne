@@ -12,6 +12,7 @@
 #include "include/database/entities/Group.h"
 #include "include/engine/services/AssetUpdates.h"
 #include "include/engine/services/BackupArchive.h"
+#include "include/ui/utils/UiMode.h"
 #include "include/ui/utils/ValidationForm.h"
 
 #include <QStyleFactory>
@@ -323,6 +324,7 @@ DialogBasicSettings::DialogBasicSettings(QWidget *parent)
     ui->skip_delete_confirm->setChecked(Configs::dataManager->settingsRepo->skip_delete_confirmation);
     D_LOAD_BOOL(show_config_security)
     ui->language->setCurrentIndex(Configs::dataManager->settingsRepo->language);
+    ui->ui_mode->setCurrentIndex(Configs::dataManager->settingsRepo->simple_mode ? 0 : 1);
     connect(ui->language, &QComboBox::currentIndexChanged, this, [=,this](int index) {
         CACHE.needRestart = true;
     });
@@ -491,6 +493,15 @@ DialogBasicSettings::DialogBasicSettings(QWidget *parent)
     D_LOAD_BOOL(skip_cert)
 
     ui->tabWidget->addTab(new DiagnosticsTab(ui->tabWidget), tr("Diagnostics"));
+    if (ui->random_listen_port->isChecked()) UiMode::Unmark(ui->random_listen_port);
+    if (ui->disable_mixed_inbound->isChecked()) UiMode::Unmark(ui->disable_mixed_inbound);
+    if (ui->enable_custom_icon->isChecked()) {
+        for (QWidget *widget : {static_cast<QWidget *>(ui->enable_custom_icon), static_cast<QWidget *>(ui->select_custom_icon),
+                                static_cast<QWidget *>(ui->follow_status_in_taskbar)}) {
+            UiMode::Unmark(widget);
+        }
+    }
+    UiMode::Apply(this);
     bindValidation();
 
     // The .ui geometry underruns real font metrics/translations and Qt then overlaps the rows (#1671).
@@ -670,6 +681,9 @@ void DialogBasicSettings::accept() {
     Configs::dataManager->settingsRepo->enable_stats = ui->connection_statistics->isChecked();
     Configs::dataManager->settingsRepo->disable_traffic_aggregation = ui->disable_traffic_aggregation->isChecked();
     Configs::dataManager->settingsRepo->language = ui->language->currentIndex();
+    const bool simpleMode = ui->ui_mode->currentIndex() == 0;
+    const bool uiModeChanged = Configs::dataManager->settingsRepo->simple_mode != simpleMode;
+    Configs::dataManager->settingsRepo->simple_mode = simpleMode;
     auto oldUseCustomIcon = Configs::dataManager->settingsRepo->use_custom_icons;
     Configs::dataManager->settingsRepo->use_custom_icons = ui->enable_custom_icon->isChecked();
     if (oldUseCustomIcon != Configs::dataManager->settingsRepo->use_custom_icons) CACHE.updateTrayIcon = true;
@@ -753,6 +767,7 @@ void DialogBasicSettings::accept() {
     if (profileListDisplayChanged) changes << MwArg::ProfileListDisplay;
     if (killSwitchChanged) changes << MwArg::KillSwitch;
     if (logFontChanged) changes << MwArg::LogFont;
+    if (uiModeChanged) changes << MwArg::UiMode;
     MW_dialog_message(MwMessage::UpdateSettings, changes);
     QDialog::accept();
 }

@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>CommandPalette</name>
+    <message>
+        <source>Settings in Advanced mode</source>
+        <translation>高级模式中的设置</translation>
+    </message>
+</context>
+<context>
     <name>ConnectionsFilterHeader</name>
     <message>
         <location filename="Throne-1.3.1/include/ui/utils/ConnectionsFilterHeader.h" line="134"/>
@@ -1403,6 +1410,22 @@ Throne will restart to complete the restore.</source>
     <message>
         <source>Xray verifies servers only against its built-in root certificates. Turn this on to also trust the certificates installed in the system, such as a company or self-signed root. A profile or Xray config that sets useSystemCA itself keeps its own value.</source>
         <translation>Xray 仅使用内置根证书验证服务器。开启后还会信任系统中安装的证书，例如公司或自签名根证书。自行设置了 useSystemCA 的配置文件或 Xray 配置保留其自身的值。</translation>
+    </message>
+    <message>
+        <source>Interface</source>
+        <translation>界面</translation>
+    </message>
+    <message>
+        <source>Simple hides the advanced options. They keep their values and still apply.</source>
+        <translation>简洁模式会隐藏高级选项，它们保留原值并继续生效。</translation>
+    </message>
+    <message>
+        <source>Simple</source>
+        <translation>简洁</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation>高级</translation>
     </message>
 </context>
 <context>
@@ -3748,6 +3771,10 @@ Use a number followed by ns, us, ms, s, m, h or d.</source>
 %3</source>
         <translation>更新了 %1, 失败了 %2:
 %3</translation>
+    </message>
+    <message>
+        <source>WARP has no config yet: click Generate Warp Config.</source>
+        <translation>WARP 尚无配置：请点击“生成 Warp 配置”。</translation>
     </message>
 </context>
 <context>
@@ -9904,6 +9931,14 @@ Error: %1</source>
     <message>
         <source>About</source>
         <translation>关于</translation>
+    </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>高级模式</translation>
+    </message>
+    <message>
+        <source>Show every option. Simple mode hides the advanced ones; they keep their values and still apply.</source>
+        <translation>显示所有选项。简洁模式会隐藏高级选项，但它们保留原值并继续生效。</translation>
     </message>
 </context>
 <context>

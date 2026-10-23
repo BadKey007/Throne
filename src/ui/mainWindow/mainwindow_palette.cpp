@@ -16,6 +16,7 @@
 #include "include/ui/stats/dialog_traffic_stats.h"
 #include "include/ui/utils/CommandPalette.h"
 #include "include/ui/utils/SettingsIndex.h"
+#include "include/ui/utils/UiMode.h"
 
 void MainWindow::setupCommandPalette() {
     commandPaletteAction = new QAction(tr("Search Settings"), this);
@@ -66,7 +67,9 @@ void MainWindow::createCommandPalette() {
         entry.section = title;
         entry.keywords = item.keywords;
         entry.action = opener;
-        entry.run = [this, opener, item] {
+        entry.advanced = item.advanced || UiMode::IsAdvanced(opener);
+        entry.run = [this, opener, item, advanced = entry.advanced] {
+            if (advanced && UiMode::Simple()) setSimpleMode(false);
             opener->trigger();
             revealSetting(item);
         };
@@ -105,6 +108,21 @@ void MainWindow::showCommandPalette() {
 void MainWindow::setDialogInUse(bool inUse) {
     dialog_is_using = inUse;
     if (commandPalette) commandPalette->blockersChanged();
+}
+
+void MainWindow::applyUiMode() {
+    UiMode::Apply(this);
+    UiMode::Apply(trayMenu);
+    ui->actionAdvanced_Mode->setChecked(!UiMode::Simple());
+}
+
+void MainWindow::setSimpleMode(bool simple) {
+    auto &settings = Configs::dataManager->settingsRepo;
+    if (settings->simple_mode != simple) {
+        settings->simple_mode = simple;
+        settings->Save();
+    }
+    applyUiMode();
 }
 
 void MainWindow::revealSetting(const SettingsIndex::Item &item) {

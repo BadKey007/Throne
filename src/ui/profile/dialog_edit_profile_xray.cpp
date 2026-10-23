@@ -108,6 +108,7 @@ void DialogEditProfile::loadXrayStream() {
     selectComboText(ui->xray_security, stream->security.toLower());
     const auto mux = ent->outbound->GetXrayMultiplex();
     ui->xray_mux->setCurrentIndex(mux->getMuxState());
+    offerCustomMux(ui->xray_mux, Configs::kXrayMuxCustom);
     CACHE.xrayMux = mux->CustomSettings();
 
     const bool tls = stream->security == "tls";

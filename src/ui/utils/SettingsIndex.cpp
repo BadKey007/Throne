@@ -26,6 +26,7 @@
 #include "include/ui/setting/dialog_preset_settings.h"
 #include "include/ui/setting/dialog_vpn_settings.h"
 #include "include/ui/utils/CommandPalette.h"
+#include "include/ui/utils/UiMode.h"
 
 namespace SettingsIndex {
     namespace {
@@ -169,7 +170,7 @@ namespace SettingsIndex {
                 // Reveal finds the widget by name again, and findChild with an empty name matches any child.
                 if (text.isEmpty() || text.size() > kMaxLabelLength || widget->objectName().isEmpty()) return;
                 found.append({{dialogClass, widget->objectName(), text, path.join(QStringLiteral(" › ")),
-                               CommandPalette::keywordsFor(widget->objectName())},
+                               CommandPalette::keywordsFor(widget->objectName()), UiMode::IsAdvanced(widget)},
                               caption});
             }
 

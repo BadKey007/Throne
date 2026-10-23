@@ -6,6 +6,7 @@
 #include "include/engine/EngineHost.h"
 #include "include/engine/supervisor/CoreSupervisor.h"
 #include "include/ui/utils/ValidationForm.h"
+#include "include/ui/utils/UiMode.h"
 
 #include <QMessageBox>
 #include <QHostAddress>
@@ -49,6 +50,7 @@ DialogVPNSettings::DialogVPNSettings(QWidget *parent) : QDialog(parent), ui(new 
     ui->auto_redirect->setChecked(Configs::dataManager->settingsRepo->vpn_auto_redirect);
     ui->l3_bridge->setChecked(Configs::dataManager->settingsRepo->vpn_l3_bridge);
     for (auto *widget : UnavailableWidgets(ui)) widget->hide();
+    UiMode::Apply(this);
 
     using namespace Validation;
     form->bind(ui->vpn_mtu, Rules::Int(kVpnMinMtu, kVpnMaxMtu, Empty::Required)).label(ui->label_10->text());

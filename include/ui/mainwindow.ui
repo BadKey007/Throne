@@ -656,6 +656,9 @@ QToolButton::menu-indicator {
               </layout>
              </widget>
              <widget class="QWidget" name="runtime_tab">
+              <property name="uiLevel" stdset="0">
+               <string notr="true">advanced</string>
+              </property>
               <attribute name="title">
                <string>Runtime Stats</string>
               </attribute>
@@ -745,6 +748,7 @@ QToolButton::menu-indicator {
     <addaction name="actionStart_with_system"/>
     <addaction name="actionRemember_last_proxy"/>
     <addaction name="actionAllow_LAN"/>
+    <addaction name="actionAdvanced_Mode"/>
     <addaction name="separator"/>
     <addaction name="actionRestart_Proxy"/>
     <addaction name="actionRestart_Program"/>
@@ -982,6 +986,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_export_config">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Export config</string>
    </property>
@@ -990,6 +997,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_reset_traffic">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Reset Traffic</string>
    </property>
@@ -1061,6 +1071,17 @@ QToolButton::menu-indicator {
     <string>Remember last profile</string>
    </property>
   </action>
+  <action name="actionAdvanced_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Advanced Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Show every option. Simple mode hides the advanced ones; they keep their values and still apply.</string>
+   </property>
+  </action>
   <action name="actionAllow_LAN">
    <property name="checkable">
     <bool>true</bool>
@@ -1086,6 +1107,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_integration_settings">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Integration Settings</string>
    </property>
@@ -1099,6 +1123,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_copy_links_nkr">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Copy links of selected (Deep Links)</string>
    </property>
@@ -1158,6 +1185,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_resolve_domain">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Resolve Domain for group</string>
    </property>
@@ -1171,16 +1201,25 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_preset_settings">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Preset Settings</string>
    </property>
   </action>
   <action name="menu_otp_manager">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>OTP Manager</string>
    </property>
   </action>
   <action name="menu_scanner">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>IP Scanner</string>
    </property>
@@ -1191,11 +1230,17 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_open_config_folder">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Open Config Folder</string>
    </property>
   </action>
   <action name="menu_open_dashboard">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Open Web dashboard</string>
    </property>
@@ -1255,6 +1300,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="menu_resolve_selected">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Resolve Selected Domain</string>
    </property>
@@ -1327,6 +1375,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="actionResolve_Out_IP">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Resolve out IP for group</string>
    </property>
@@ -1352,6 +1403,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="actionResolve_Selected_Out_IP">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Resolve Selected Out IP</string>
    </property>
@@ -1372,6 +1426,9 @@ QToolButton::menu-indicator {
    </property>
   </action>
   <action name="actionRuntime_Stats">
+   <property name="uiLevel" stdset="0">
+    <string notr="true">advanced</string>
+   </property>
    <property name="text">
     <string>Runtime Stats</string>
    </property>

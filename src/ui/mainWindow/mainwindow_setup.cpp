@@ -46,6 +46,7 @@
 
 #include "include/ui/utils/ProfilesTableFilterHeader.h"
 #include "include/ui/utils/ProfilesTableModel.h"
+#include "include/ui/utils/UiMode.h"
 
 #include "include/ui/group/dialog_edit_group.h"
 #include "include/ui/utils/NativeFileDialog.h"
@@ -634,6 +635,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     trayMenu->addAction(actSelectRouting);
     auto *actOtpCodes = new QAction(tr("OTP Codes"), trayMenu);
     connect(actOtpCodes, &QAction::triggered, this, [this]() { openTrayOtpCodes(); });
+    UiMode::MarkAdvanced(actOtpCodes);
     trayMenu->addAction(actOtpCodes);
     // MacOS cannot reuse menus across different parents properly
     if (getOS() == Darwin) {
@@ -688,6 +690,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->actionAllow_LAN->setChecked(checked);
         MW_dialog_message(MwMessage::UpdateSettings, {});
     });
+    connect(ui->actionAdvanced_Mode, &QAction::triggered, this, [=,this](bool checked) { setSimpleMode(!checked); });
+    applyUiMode();
     connect(ui->checkBox_VPN, &QCheckBox::clicked, this, [=,this](bool checked) { connection()->setTun(checked); });
     connect(ui->checkBox_SystemProxy, &QCheckBox::clicked, this, [=,this](bool checked) { connection()->setSystemProxy(checked); });
     connect(ui->menu_spmode, &QMenu::aboutToShow, this, [=,this]() {
@@ -912,7 +916,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         QString name;
         auto selected = get_now_selected_list();
 
-        ui->menu_export_config->setVisible(false);
+        UiMode::SetVisible(ui->menu_export_config, false);
         if (selected.isEmpty()) return;
 
         auto profile = Configs::dataManager->profilesRepo->GetProfile(selected.first());
@@ -924,7 +928,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             ui->actionCopy_Test_Result->setVisible(true);
         }
 
-        ui->menu_export_config->setVisible(true);
+        UiMode::SetVisible(ui->menu_export_config, true);
     });
     connect(ui->actionCopy_Test_Result, &QAction::triggered, this, [=,this]() {
         auto ents = get_now_selected_list();

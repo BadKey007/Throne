@@ -70,6 +70,7 @@ namespace Configs {
             {"use_dns_object",                &use_dns_object},
             {"skip_delete_confirmation",      &skip_delete_confirmation},
             {"show_config_security",          &show_config_security},
+            {"simple_mode",                   &simple_mode},
             {"log_enable_include",            &log_enable_include},
             {"log_enable_exclude",            &log_enable_exclude},
             {"enable_warp",                   &enable_warp},
@@ -260,7 +261,9 @@ namespace Configs {
         auto query = db.query("SELECT key, value FROM settings");
         if (!query) return;
 
+        bool freshInstall = true;
         while (query->executeStep()) {
+            freshInstall = false;
             const QString key = QString::fromStdString(query->getColumn(0).getText());
             const QString str = QString::fromStdString(query->getColumn(1).getText());
 
@@ -319,6 +322,7 @@ namespace Configs {
                 continue;
             }
         }
+        if (freshInstall) simple_mode = true;
         // Builds before 1.2.1 saved the translated interval label ("5 мин.", "۱۰ دقیقه"), which the core rejects.
         if (!Validation::Duration(ntp_interval).isEmpty()) {
             QString minutes;

@@ -282,6 +282,8 @@ set(PROJECT_SOURCES
         src/ui/utils/CommandPalette.cpp
         include/ui/utils/SettingsIndex.h
         src/ui/utils/SettingsIndex.cpp
+        include/ui/utils/UiMode.h
+        src/ui/utils/UiMode.cpp
 
         include/ui/profile/dialog_edit_profile.h
         src/ui/profile/dialog_edit_profile.cpp

@@ -16,6 +16,7 @@ namespace SettingsIndex {
         // Tabs and group boxes inside the dialog: "Logging › Log Filtering".
         QString path;
         QString keywords;
+        bool advanced = false;
     };
 
     QList<Item> Build();
