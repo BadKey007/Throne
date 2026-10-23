@@ -267,6 +267,7 @@ set(PROJECT_SOURCES
         src/ui/utils/ProfilesTableVerticalHeader.cpp
         include/ui/utils/ProfilesTableFilterHeader.h
         include/ui/utils/ConnectionsFilterHeader.h
+        include/ui/utils/HeaderSortArrow.h
         include/ui/utils/ConnectionsTreeModel.h
         src/ui/utils/ConnectionsTreeModel.cpp
         include/ui/utils/ConnectionsTreeFilterProxyModel.h
