@@ -161,6 +161,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_5">
+      <property name="uiFoldInto" stdset="0">
+       <string notr="true">tab</string>
+      </property>
       <attribute name="title">
        <string>Warp</string>
       </attribute>
@@ -465,6 +468,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QGroupBox" name="simple_dns_box">
+         <property name="uiFoldInto" stdset="0">
+          <string notr="true">tab</string>
+         </property>
          <property name="title">
           <string>Simple DNS Settings</string>
          </property>

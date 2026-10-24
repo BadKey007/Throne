@@ -493,6 +493,8 @@ private:
 
     void createCommandPalette();
 
+    void fillPaletteSettings();
+
     void showCommandPalette();
 
     void revealSetting(const SettingsIndex::Item &item);

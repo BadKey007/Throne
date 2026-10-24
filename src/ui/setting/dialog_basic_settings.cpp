@@ -502,6 +502,7 @@ DialogBasicSettings::DialogBasicSettings(QWidget *parent)
         }
     }
     UiMode::Apply(this);
+    UiMode::Fold(this);
     bindValidation();
 
     // The .ui geometry underruns real font metrics/translations and Qt then overlaps the rows (#1671).

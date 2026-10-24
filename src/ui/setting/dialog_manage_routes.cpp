@@ -523,9 +523,13 @@ DialogManageRoutes::DialogManageRoutes(QWidget *parent) : QDialog(parent), ui(ne
     connect(ui->warp_autogen, &QPushButton::clicked, this, &DialogManageRoutes::generate_warp_config);
     connect(ui->warp_api_hosts_btn, &QPushButton::clicked, this, [this] { editWarpApiHosts(this); });
 
-    // A custom DNS object greys out every field above, so Simple mode keeps its switch in view while it is on.
-    if (ui->use_dns_object->isChecked()) UiMode::Unmark(ui->groupBox);
+    // A custom DNS object greys out the DNS fields, so Simple mode keeps its switch beside them while it is on.
+    if (ui->use_dns_object->isChecked()) {
+        UiMode::Unmark(ui->groupBox);
+        UiMode::Unmark(ui->simple_dns_box);
+    }
     UiMode::Apply(this);
+    UiMode::Fold(this);
 
     form->bind(ui->remote_dns, manageRoutesDnsProblem).label(ui->label_9->text());
     form->bind(ui->direct_dns, manageRoutesDnsProblem).label(ui->label_8->text());

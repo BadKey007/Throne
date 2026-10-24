@@ -1,11 +1,16 @@
 #include "include/ui/utils/UiMode.h"
 
+#include <algorithm>
+
 #include <QAction>
 #include <QFormLayout>
+#include <QGridLayout>
+#include <QGroupBox>
 #include <QLabel>
 #include <QMenu>
 #include <QStackedWidget>
 #include <QTabWidget>
+#include <QVBoxLayout>
 
 #include "include/global/Configs.hpp"
 
@@ -13,23 +18,28 @@ namespace UiMode {
     namespace {
         constexpr auto kLevelProperty = "uiLevel";
         constexpr auto kWantedProperty = "uiWanted";
+        constexpr auto kFoldProperty = "uiFoldInto";
 
         bool tagged(const QObject *object) {
             return object != nullptr && object->property(kLevelProperty).toString() == QLatin1String("advanced");
         }
 
-        QFormLayout *formHolding(QLayout *layout, QWidget *widget) {
+        QLayout *layoutHolding(QLayout *layout, QWidget *widget) {
             if (!layout) return nullptr;
-            if (auto *form = qobject_cast<QFormLayout *>(layout); form && form->indexOf(widget) >= 0) return form;
+            if (layout->indexOf(widget) >= 0) return layout;
             for (int i = 0; i < layout->count(); ++i) {
-                if (auto *found = formHolding(layout->itemAt(i)->layout(), widget)) return found;
+                if (auto *found = layoutHolding(layout->itemAt(i)->layout(), widget)) return found;
             }
             return nullptr;
         }
 
-        QFormLayout *formOf(const QWidget *widget) {
+        QLayout *layoutOf(const QWidget *widget) {
             QWidget *parent = widget->parentWidget();
-            return parent ? formHolding(parent->layout(), const_cast<QWidget *>(widget)) : nullptr;
+            return parent ? layoutHolding(parent->layout(), const_cast<QWidget *>(widget)) : nullptr;
+        }
+
+        QFormLayout *formOf(const QWidget *widget) {
+            return qobject_cast<QFormLayout *>(layoutOf(widget));
         }
 
         QWidget *rowLabel(const QWidget *widget) {
@@ -82,6 +92,35 @@ namespace UiMode {
             if (auto *menu = qobject_cast<QMenu *>(object)) return menu->menuAction();
             return qobject_cast<QAction *>(object);
         }
+
+        // Ahead of a trailing spacer, so the page keeps packing its rows to the top.
+        void appendSection(QLayout *layout, QWidget *section) {
+            if (auto *box = qobject_cast<QBoxLayout *>(layout)) {
+                int index = box->count();
+                while (index > 0 && box->itemAt(index - 1)->spacerItem()) --index;
+                box->insertWidget(index, section);
+            } else if (auto *grid = qobject_cast<QGridLayout *>(layout)) {
+                grid->addWidget(section, grid->rowCount(), 0, 1, qMax(1, grid->columnCount()));
+            } else if (auto *form = qobject_cast<QFormLayout *>(layout)) {
+                form->addRow(section);
+            }
+        }
+
+        QWidget *sectionOf(QWidget *page, QTabWidget *tabs) {
+            auto *box = new QGroupBox(tabs->tabText(tabs->indexOf(page)));
+            tabs->removeTab(tabs->indexOf(page));
+            // A page's spacer would otherwise make the box share the target page's spare height.
+            box->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+            if (page->layout()) page->layout()->setContentsMargins(0, 0, 0, 0);
+            (new QVBoxLayout(box))->addWidget(page);
+            page->show();
+            return box;
+        }
+
+        bool hasShownContent(const QWidget *page) {
+            const auto children = page->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
+            return std::any_of(children.cbegin(), children.cend(), [](const QWidget *child) { return !child->isHidden(); });
+        }
     }
 
     bool Simple() {
@@ -109,6 +148,44 @@ namespace UiMode {
 
     void Unmark(QObject *object) {
         object->setProperty(kLevelProperty, QVariant());
+        object->setProperty(kFoldProperty, QVariant());
+    }
+
+    QString FoldTarget(const QObject *object) {
+        return object->property(kFoldProperty).toString();
+    }
+
+    void Fold(QWidget *root) {
+        if (!Simple()) return;
+        // In tab order, so the sections keep the order of the tabs they came from.
+        QList<QWidget *> folds;
+        for (auto *tabs : root->findChildren<QTabWidget *>()) {
+            for (int i = 0; i < tabs->count(); ++i) {
+                QWidget *page = tabs->widget(i);
+                auto inPage = page->findChildren<QWidget *>();
+                inPage.prepend(page);
+                for (QWidget *widget : std::as_const(inPage)) {
+                    if (!FoldTarget(widget).isEmpty() && !folds.contains(widget)) folds.append(widget);
+                }
+            }
+        }
+        for (QWidget *widget : std::as_const(folds)) {
+            const QString into = FoldTarget(widget);
+            auto *target = root->findChild<QWidget *>(into);
+            if (target == nullptr || target->layout() == nullptr) continue;
+            if (auto *tabs = tabsOf(widget)) {
+                if (tabs->isTabVisible(tabs->indexOf(widget))) appendSection(target->layout(), sectionOf(widget, tabs));
+            } else if (!widget->isHidden()) {
+                // Taken out first: adding a widget its old layout still holds makes Qt warn on every open.
+                if (auto *layout = layoutOf(widget)) layout->removeWidget(widget);
+                appendSection(target->layout(), widget);
+            }
+        }
+        for (auto *tabs : root->findChildren<QTabWidget *>()) {
+            for (int i = 0; i < tabs->count(); ++i) {
+                if (tabs->isTabVisible(i) && !hasShownContent(tabs->widget(i))) tabs->setTabVisible(i, false);
+            }
+        }
     }
 
     void Apply(QWidget *root) {

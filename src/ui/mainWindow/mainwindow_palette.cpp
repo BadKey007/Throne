@@ -52,8 +52,12 @@ void MainWindow::createCommandPalette() {
                                             {ui->menu_server->title(), ui->menu_server},
                                         },
                                         commandPaletteAction);
-
     // Reading the settings forms costs a few milliseconds, so it waits for the first open.
+    fillPaletteSettings();
+}
+
+void MainWindow::fillPaletteSettings() {
+    const bool simple = UiMode::Simple();
     QList<CommandPalette::Entry> settings;
     for (const auto &item : SettingsIndex::Build()) {
         QAction *opener = settingsDialogOpeners.value(item.dialogClass);
@@ -63,11 +67,13 @@ void MainWindow::createCommandPalette() {
         CommandPalette::Entry entry;
         entry.kind = CommandPalette::Entry::Setting;
         entry.label = item.label;
-        entry.path = item.path.isEmpty() ? title : title + " › " + item.path;
         entry.section = title;
         entry.keywords = item.keywords;
         entry.action = opener;
         entry.advanced = item.advanced || UiMode::IsAdvanced(opener);
+        // Running a parked entry switches to Advanced first, so it opens where the full layout puts it.
+        const QString &where = simple && !entry.advanced ? item.simplePath : item.path;
+        entry.path = where.isEmpty() ? title : title + " › " + where;
         entry.run = [this, opener, item, advanced = entry.advanced] {
             if (advanced && UiMode::Simple()) setSimpleMode(false);
             opener->trigger();
@@ -114,6 +120,7 @@ void MainWindow::applyUiMode() {
     UiMode::Apply(this);
     UiMode::Apply(trayMenu);
     ui->actionAdvanced_Mode->setChecked(!UiMode::Simple());
+    if (commandPalette) fillPaletteSettings();
 }
 
 void MainWindow::setSimpleMode(bool simple) {
